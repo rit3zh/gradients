@@ -2,20 +2,19 @@ import type { ReactNode } from "react";
 import { ArrowUpRight, MoveUpRight } from "lucide";
 import { MetalIcon, OpenGLIcon } from "@/components/icons";
 import { Icon } from "@/components/ui/icon";
-import { site } from "@/lib/site";
 
-// Each platform's native renderer, linked to the shaders it runs.
+// Each platform's native renderer, linked to its official documentation.
 const RENDERERS: { name: string; platform: string; href: string; logo: ReactNode }[] = [
 	{
 		name: "Metal",
 		platform: "iOS",
-		href: `${site.repo}/tree/main/ios/Shaders`,
+		href: "https://developer.apple.com/documentation/metal",
 		logo: <MetalIcon className="size-[18px] rounded-[5px] shadow-[0_1px_2px_oklch(0_0_0/0.15)]" />,
 	},
 	{
 		name: "OpenGL ES",
 		platform: "Android",
-		href: `${site.repo}/tree/main/android/src/main/assets/expo-gradients/shaders`,
+		href: "https://developer.android.com/develop/ui/views/graphics/agsl",
 		logo: <OpenGLIcon className="h-3.5 w-auto text-[#5586a4] dark:text-[#7fa9c4]" />,
 	},
 ];
@@ -32,7 +31,7 @@ export function Renderers() {
 						href={renderer.href}
 						target="_blank"
 						rel="noreferrer"
-						title={`${renderer.name} shaders on GitHub`}
+						title={`${renderer.name} documentation`}
 						className="group/chip flex h-8 items-center gap-2 rounded-full bg-surface pr-2.5 pl-1.5 text-[12.5px] outline-offset-2 transition-[background-color,scale] duration-200 ease-out hover:bg-accent focus-visible:outline-2 focus-visible:outline-solid active:scale-[0.97]"
 					>
 						<span className="grid h-5 min-w-5 place-items-center px-0.5">{renderer.logo}</span>
