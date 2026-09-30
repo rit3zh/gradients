@@ -1,0 +1,24 @@
+---
+title: "Diamond"
+description: "A four-point falloff: rings that are squares, turned on their corners."
+---
+
+<GradientExample type="diamond" />
+
+A diamond is a radial gradient measured with Manhattan distance, so its rings have straight edges and four points. By default (`shape="fit"`) it stretches to the view's proportions; `shape="square"` keeps the sides equal.
+
+`angle` rotates the diamond, and `spin` keeps it turning. `flow` sends rings outward from the center, which reads beautifully with soft palettes.
+
+<Swatches
+  items={[
+    { label: "Fit", note: "shape='fit'", gradient: { type: "diamond", colors: ["#FDB99B", "#CF8BF3", "#A770EF"] } },
+    { label: "Square", note: "shape='square'", gradient: { type: "diamond", shape: "square", colors: ["#FDB99B", "#CF8BF3", "#A770EF"] } },
+    { label: "Rotated", note: "angle={45}", gradient: { type: "diamond", shape: "square", angle: 45, radius: 0.7, colors: ["#FDB99B", "#CF8BF3", "#A770EF"] } },
+  ]}
+/>
+
+## Props
+
+<PropsTable of="diamond" />
+
+<SharedProps />

@@ -1,0 +1,24 @@
+---
+title: "Strata"
+description: "Layered ridges drifting past, like hills at dusk."
+---
+
+<GradientExample type="strata" />
+
+Strata draws up to twelve undulating ridges, one behind the other, and colors each layer from the next part of the palette. Light falls from the top (`shade`), so the lower, nearer layers read darker, like a landscape seen at dusk.
+
+`count` sets the number of ridges, `frequency` how often they undulate and `angle` their tilt.
+
+<Swatches
+  items={[
+    { label: "Two", note: "count={2}", gradient: { type: "strata", count: 2, colors: ["#23074D", "#833AB4", "#FD1D1D", "#FCB045"] } },
+    { label: "Default", note: "count={3}", gradient: { type: "strata", colors: ["#23074D", "#833AB4", "#FD1D1D", "#FCB045"] } },
+    { label: "Range", note: "count={7}", gradient: { type: "strata", count: 7, angle: 12, colors: ["#23074D", "#833AB4", "#FD1D1D", "#FCB045"] } },
+  ]}
+/>
+
+## Props
+
+<PropsTable of="strata" />
+
+<SharedProps />

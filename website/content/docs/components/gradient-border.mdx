@@ -1,0 +1,54 @@
+---
+title: "GradientBorder"
+description: "An anti-aliased gradient ring around any content, animated for free."
+---
+
+`GradientBorder` draws a gradient as a rounded ring and lays its children out inside it. The ring is computed in the shader from a signed distance, so its edges are anti-aliased and corners stay crisp at any radius.
+
+<Preview demo="border" border={{ width: 4, radius: 22 }} gradient={{ type: "conic", spin: 10, colors: ["#FC00FF", "#FF0080", "#FFC371", "#833AB4", "#FC00FF"] }} backdrop="#0B0A12">
+
+```tsx
+import { ConicGradient, GradientBorder } from '@rit3zh/gradients';
+
+<GradientBorder
+  gradient={<ConicGradient spin={10} colors={['#FC00FF', '#FF0080', '#FFC371', '#833AB4', '#FC00FF']} />}
+  width={4}
+  radius={22}
+>
+  <View style={styles.card}>
+    <Text style={styles.eyebrow}>Membership</Text>
+    <Text style={styles.plan}>Pro, yearly</Text>
+    <Text style={styles.renewal}>Renews on Sep 9</Text>
+  </View>
+</GradientBorder>
+```
+
+</Preview>
+
+## Sizing
+
+`width` is the ring's thickness and also the padding around the children, so content never overlaps the ring. `radius` is the outer corner radius; the inner corners follow it automatically.
+
+Give the inner content its own background and a radius of `radius - width` for a seamless card:
+
+```tsx
+<GradientBorder gradient={<LinearGradient colors={['#12C2E9', '#F64F59']} />} width={2} radius={16}>
+  <View style={{ borderRadius: 14, backgroundColor: '#111', padding: 16 }}>{children}</View>
+</GradientBorder>
+```
+
+## Animated outlines
+
+Conic gradients with `spin` make the classic rotating border. Close the palette (repeat the first color at the end) so there's no seam where the angle wraps.
+
+```tsx
+<GradientBorder gradient={<ConicGradient spin={60} colors={['#00F5A0', '#00D9F5', '#7B61FF', '#00F5A0']} />} />
+```
+
+For focus or selection states, drive `paused` or swap the gradient with a `transition`.
+
+## Props
+
+<PropsTable of="border" />
+
+`GradientBorder` is a view and accepts every [playback prop](/docs/components/gradient#props).

@@ -1,0 +1,35 @@
+---
+title: "Holographic"
+description: "Diffraction foil with glints that catch the light as the device tilts."
+---
+
+<GradientExample type="holographic" tone="dark" />
+
+Holographic renders brushed foil with a diffraction grating: bands of spectrum that slide as the device tilts, a bright sheen that follows the light, and tiny glints that flash at particular angles. Device motion is on by default for this type.
+
+It's built for collectibles, premium cards, tickets and badges.
+
+```tsx
+<HolographicGradient style={styles.card} sparkle={1.2} />
+```
+
+## Tuning the foil
+
+`bands` sets how many spectrum cycles cross the card, `sheen` the brightness of the moving band, and `sparkle` how often glints appear. `colors` with `paletteMix` tint the foil toward a brand palette.
+
+<Swatches
+  tall
+  items={[
+    { label: "Silver", note: "default", gradient: { type: "holographic" } },
+    { label: "Dense", note: "bands={3}", gradient: { type: "holographic", bands: 3, sparkle: 1.4 } },
+    { label: "Tinted", note: "colors", gradient: { type: "holographic", colors: ["#7B61FF", "#FF5FA2", "#FFB86B"] } },
+  ]}
+/>
+
+Holographic renders at full native resolution so the glints stay crisp. See [Performance](/docs/guides/performance#recommendations) before filling a whole screen with it.
+
+## Props
+
+<PropsTable of="holographic" />
+
+<SharedProps />

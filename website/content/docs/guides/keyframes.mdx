@@ -1,0 +1,77 @@
+---
+title: "Keyframes"
+description: "Native sequences that step through prop sets on their own, looping forever or playing once."
+---
+
+`keyframes` is a list of further prop sets. The gradient starts at its own props, travels to each keyframe in turn using `transition`, and with `loop` (the default) goes back to the start. The whole sequence runs natively; React renders it once.
+
+<Preview
+  gradient={{ type: "linear", angle: 160, colors: ["#833AB4", "#FD1D1D", "#FCB045"] }}
+  keyframes={[
+    { colors: ["#FC5C7D", "#6A82FB", "#C471ED"], angle: 220 },
+    { colors: ["#FF5F6D", "#FFC371", "#FF0080"], angle: 120 },
+  ]}
+  transition={{ duration: 2400, easing: "smooth" }}
+>
+
+```tsx
+<LinearGradient
+  style={StyleSheet.absoluteFill}
+  angle={160}
+  colors={['#833AB4', '#FD1D1D', '#FCB045']}
+  keyframes={[
+    { colors: ['#FC5C7D', '#6A82FB', '#C471ED'], angle: 220 },
+    { colors: ['#FF5F6D', '#FFC371', '#FF0080'], angle: 120 },
+  ]}
+  transition={{ duration: 2400, easing: 'smooth' }}
+/>
+```
+
+</Preview>
+
+Each keyframe only needs the props that change. Everything else carries over from the component's props.
+
+## Timing
+
+`transition` sets how long each step takes and how it eases. Without a transition, steps use 1.2 seconds with `easeInOut`. A spring works too: each step starts when the previous one settles.
+
+## Playing once
+
+Set `loop={false}` to stop on the last keyframe:
+
+```tsx
+<RadialGradient
+  colors={['#0F0C29', '#0F0C29']}
+  keyframes={[{ colors: ['#FDEFF9', '#EC38BC', '#0F0C29'], radius: 1.4 }]}
+  transition={{ duration: 900, easing: 'easeOut' }}
+  loop={false}
+/>
+```
+
+Changing the component's props or `keyframes` restarts the sequence from the new props.
+
+## Stacks
+
+For a `GradientStack` or `<Gradient layers={...} />`, each keyframe is a complete list of layers:
+
+```tsx
+<Gradient
+  layers={[
+    { type: 'aurora', colors: ['#7303C0', '#EC38BC', '#FF0080'] },
+    { type: 'vignette', intensity: 0.4 },
+  ]}
+  keyframes={[
+    [
+      { type: 'aurora', colors: ['#00F5A0', '#00D9F5', '#7B61FF'] },
+      { type: 'vignette', intensity: 0.8 },
+    ],
+  ]}
+  transition={{ duration: 3000, easing: 'smooth' }}
+/>
+```
+
+Layers that line up (same position, same type) blend smoothly. Anything else crossfades, as described in [Transitions](/docs/guides/transitions#what-interpolates).
+
+## Props
+
+<PropsTable of="keyframes" />

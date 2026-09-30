@@ -1,0 +1,60 @@
+---
+title: "GradientText"
+description: "Paint text with any gradient, animated, at the full sharpness of the platform's text renderer."
+---
+
+`GradientText` renders a regular React Native `Text` and uses it as the mask for a gradient. The text keeps native rendering: custom fonts, font scaling and accessibility behave as usual.
+
+<Preview demo="text" text="Aa" gradient={{ type: "silk", speed: 0.8, colors: ["#FC00FF", "#FF5F6D", "#FFC371"] }} backdrop="#0F0C29">
+
+```tsx
+import { GradientText, SilkGradient } from '@rit3zh/gradients';
+
+<GradientText
+  gradient={<SilkGradient speed={0.8} colors={['#FC00FF', '#FF5F6D', '#FFC371']} />}
+  style={{ fontSize: 120, fontWeight: '800', letterSpacing: -1 }}
+>
+  Aa
+</GradientText>
+```
+
+</Preview>
+
+## The gradient element
+
+`gradient` takes an element of any gradient component, or a [`GradientStack`](/docs/components/gradient-stack) for layered fills. Its props configure the fill; its playback props (`paused`, `transition`, `grain`…) apply unless the `GradientText` sets its own.
+
+```tsx
+<GradientText gradient={<LinearGradient colors={['#12C2E9', '#C471ED', '#F64F59']} angle={90} />}>
+  Linear
+</GradientText>
+
+<GradientText gradient={<HolographicGradient />} style={styles.price}>
+  $9.99
+</GradientText>
+```
+
+The gradient fills the text's box, so a two-line heading shares one continuous gradient instead of repeating it per line.
+
+## Styling
+
+`style` goes to the `Text` (font, size, alignment, line height); `containerStyle` goes to the view around it (margins, position, flex). `numberOfLines` and `allowFontScaling` pass through.
+
+```tsx
+<GradientText
+  gradient={<ConicGradient spin={30} />}
+  style={{ fontSize: 34, fontWeight: '700', textAlign: 'center' }}
+  containerStyle={{ marginTop: 24 }}
+  numberOfLines={2}
+>
+  Welcome back
+</GradientText>
+```
+
+<Callout title="Color is ignored">
+  The text's `color` only shapes the mask. Any opaque color gives full coverage; a semi-transparent one lets the gradient show through at that strength.
+</Callout>
+
+## Props
+
+<PropsTable of="text" />

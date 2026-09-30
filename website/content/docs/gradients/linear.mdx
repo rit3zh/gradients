@@ -1,0 +1,32 @@
+---
+title: "Linear"
+description: "Colors along a straight line, set by an angle or by two points."
+---
+
+<GradientExample type="linear" />
+
+The first color sits at the start of the line and the last at the end. With `angle`, the line runs through the center and is just long enough to reach both corners, the same geometry as CSS: `180` runs top to bottom, `90` left to right.
+
+For exact placement, pass `start` and `end` as unit points instead. They take precedence over `angle`.
+
+```tsx
+<LinearGradient colors={['#12C2E9', '#F64F59']} start={[0, 0]} end={[1, 1]} />
+```
+
+## Motion
+
+`spin` rotates the line in degrees per second; with points, they rotate around the center. `flow` scrolls the colors along the line.
+
+<Swatches
+  items={[
+    { label: "Angle", note: "angle={135}", gradient: { type: "linear", angle: 135, colors: ["#833AB4", "#FD1D1D", "#FCB045"] } },
+    { label: "Points", note: "start / end", gradient: { type: "linear", start: [0.2, 0.9], end: [0.8, 0.1], colors: ["#833AB4", "#FD1D1D", "#FCB045"] } },
+    { label: "Flowing", note: "flow={0.3}", gradient: { type: "linear", angle: 90, flow: 0.3, colors: ["#833AB4", "#FD1D1D", "#FCB045"] } },
+  ]}
+/>
+
+## Props
+
+<PropsTable of="linear" />
+
+<SharedProps />

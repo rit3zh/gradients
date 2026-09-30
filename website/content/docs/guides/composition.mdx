@@ -1,0 +1,109 @@
+---
+title: "Composition"
+description: "Stack layers, blend them with 18 modes, and blend a gradient with the views behind it."
+---
+
+Complex looks are rarely one gradient. A base surface, a light source, some texture and a vignette make a background feel designed. Gradients composites all of them in **one fragment pass**, so a five-layer stack costs about the same as one layer.
+
+## Stacking layers
+
+Put gradient components inside a [`GradientStack`](/docs/components/gradient-stack). The first child is the bottom layer.
+
+<Preview
+  layers={[
+    { type: "aurora", colors: ["#7303C0", "#EC38BC", "#FF0080"] },
+    { type: "glow", center: [0.5, 0.95], radius: 1.4, colors: ["rgba(255, 102, 255, 0.55)", "rgba(115, 3, 192, 0)"] },
+    { type: "noise", colors: ["#000000", "#FFFFFF"], blendMode: "overlay", opacity: 0.12, scale: 6 },
+    { type: "vignette", intensity: 0.8 },
+  ]}
+  backdrop="#03001E"
+>
+
+```tsx
+<View style={{ flex: 1, backgroundColor: '#03001E' }}>
+  <GradientStack style={StyleSheet.absoluteFill}>
+    <AuroraGradient colors={['#7303C0', '#EC38BC', '#FF0080']} />
+    <GlowGradient
+      center={[0.5, 0.95]}
+      radius={1.4}
+      colors={['rgba(255, 102, 255, 0.55)', 'rgba(115, 3, 192, 0)']}
+    />
+    <NoiseGradient colors={['#000000', '#FFFFFF']} blendMode="overlay" opacity={0.12} scale={6} />
+    <VignetteGradient intensity={0.8} />
+  </GradientStack>
+</View>
+```
+
+</Preview>
+
+Each layer keeps its own options and its own clock. The playback props (`paused`, `transition`, `grain` and so on) belong to the stack.
+
+The same stack can be written as data with the `layers` prop of [`Gradient`](/docs/components/gradient), which is handy when layers come from state or a theme:
+
+```tsx
+<Gradient
+  style={StyleSheet.absoluteFill}
+  layers={[
+    { type: 'aurora', colors: ['#7303C0', '#EC38BC', '#FF0080'] },
+    { type: 'vignette', intensity: 0.8 },
+  ]}
+/>
+```
+
+## Blend modes
+
+`blendMode` decides how a layer combines with everything below it. All 18 modes follow the W3C compositing definitions and are computed in the shader, so they look the same on both platforms.
+
+<Swatches
+  items={[
+    { label: "Normal", note: "'normal'", layers: [{ type: "linear", angle: 90, colors: ["#3224AE", "#FF0080"] }, { type: "radial", colors: ["#FFC371", "rgba(255, 195, 113, 0)"], radius: 0.8, opacity: 0.9 }] },
+    { label: "Screen", note: "'screen'", layers: [{ type: "linear", angle: 90, colors: ["#3224AE", "#FF0080"] }, { type: "radial", colors: ["#FFC371", "rgba(255, 195, 113, 0)"], radius: 0.8, blendMode: "screen" }] },
+    { label: "Overlay", note: "'overlay'", layers: [{ type: "linear", angle: 90, colors: ["#3224AE", "#FF0080"] }, { type: "radial", colors: ["#FFC371", "rgba(255, 195, 113, 0)"], radius: 0.8, blendMode: "overlay" }] },
+    { label: "Multiply", note: "'multiply'", layers: [{ type: "linear", angle: 90, colors: ["#3224AE", "#FF0080"] }, { type: "radial", colors: ["#FFC371", "rgba(255, 195, 113, 0)"], radius: 0.8, blendMode: "multiply" }] },
+    { label: "Difference", note: "'difference'", layers: [{ type: "linear", angle: 90, colors: ["#3224AE", "#FF0080"] }, { type: "radial", colors: ["#FFC371", "rgba(255, 195, 113, 0)"], radius: 0.8, blendMode: "difference" }] },
+    { label: "Color", note: "'color'", layers: [{ type: "linear", angle: 90, colors: ["#3224AE", "#FF0080"] }, { type: "radial", colors: ["#FFC371", "rgba(255, 195, 113, 0)"], radius: 0.8, blendMode: "color" }] },
+  ]}
+/>
+
+| Group | Modes |
+| --- | --- |
+| Normal | `normal` |
+| Darken | `multiply`, `darken`, `colorBurn`, `plusDarker` |
+| Lighten | `screen`, `lighten`, `colorDodge`, `plusLighter` |
+| Contrast | `overlay`, `softLight`, `hardLight` |
+| Inversion | `difference`, `exclusion` |
+| Component | `hue`, `saturation`, `color`, `luminosity` |
+
+A few combinations do most of the work in practice:
+
+- **Texture:** black-and-white `NoiseGradient` in `softLight` or `overlay` at 10 to 35% opacity.
+- **Light:** `GlowGradient` or `SpotlightGradient` in `screen` or `plusLighter`.
+- **Tint:** a flat or linear layer in `color` to recolor everything below while keeping its shading.
+
+<Callout type="tip" title="Fast path">
+  When every layer uses `normal`, the stack compiles without any blend math at all. Blend modes are cheap, but you don't pay for them unless you use them.
+</Callout>
+
+## Blending with the app
+
+On a standalone gradient, outside a stack, `blendMode` blends the whole view with whatever is rendered behind it: an image, a video, other views.
+
+```tsx
+<ImageBackground source={photo} style={styles.hero}>
+  <LinearGradient
+    style={StyleSheet.absoluteFill}
+    colors={['#FF0080', '#3224AE']}
+    blendMode="color"
+  />
+</ImageBackground>
+```
+
+This uses the platform compositor (a compositing filter on iOS, a layer blend on Android). On Android versions before 10 only `multiply`, `screen`, `overlay`, `darken`, `lighten`, `plusLighter` and `plusDarker` are available there; other modes draw normally. `plusDarker` is approximated with `multiply` on Android.
+
+## Opacity
+
+`opacity` fades a single layer inside the stack. To fade the whole view, use the regular `opacity` style or an animated style on a parent.
+
+## Props
+
+<PropsTable of="composition" />

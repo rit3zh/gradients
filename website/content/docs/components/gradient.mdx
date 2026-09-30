@@ -1,0 +1,72 @@
+---
+title: "Gradient"
+description: "One component for every type, chosen by a prop. Useful when the look comes from data."
+---
+
+`Gradient` renders any of the 27 types by name, or several layers at once. It's the same renderer as the typed components; choose it when the type isn't known ahead of time, such as a theme, a server response or a user setting.
+
+```tsx
+import { Gradient } from '@rit3zh/gradients';
+
+<Gradient type="aurora" colors={['#7303C0', '#EC38BC', '#FF0080']} style={StyleSheet.absoluteFill} />
+```
+
+Its props are typed per `type`: with `type="mesh"`, TypeScript offers `rows`, `columns` and `drift` and rejects options meant for other types.
+
+## From data
+
+Because a gradient is plain data, it can live in a theme and be swapped at runtime:
+
+```tsx
+import { Gradient, type TGradientLayer } from '@rit3zh/gradients';
+
+const themes: Record<string, TGradientLayer> = {
+  dusk: { type: 'linear', colors: ['#833AB4', '#FD1D1D', '#FCB045'], angle: 160 },
+  night: { type: 'aurora', colors: ['#7303C0', '#EC38BC', '#FF0080'] },
+  paper: { type: 'noise', colors: ['#F4F1EA', '#E8E2D4'], scale: 3 },
+};
+
+export function Background({ theme }: { theme: keyof typeof themes }) {
+  return <Gradient {...themes[theme]} transition style={StyleSheet.absoluteFill} />;
+}
+```
+
+With `transition`, switching themes animates. Switching between different types crossfades.
+
+## Layers
+
+Instead of `type`, pass `layers` to composite several gradients in one pass. It's the data form of [`GradientStack`](/docs/components/gradient-stack):
+
+<Preview
+  layers={[
+    { type: "linear", colors: ["#0F0C29", "#302B63", "#24243E"] },
+    { type: "spotlight", origin: [0.5, 0], spread: 36, speed: 1, colors: ["#FDEFF9", "#EC38BC", "rgba(15, 12, 41, 0)"], blendMode: "screen" },
+  ]}
+>
+
+```tsx
+<Gradient
+  style={StyleSheet.absoluteFill}
+  layers={[
+    { type: 'linear', colors: ['#0F0C29', '#302B63', '#24243E'] },
+    {
+      type: 'spotlight',
+      origin: [0.5, 0],
+      spread: 36,
+      speed: 1,
+      colors: ['#FDEFF9', '#EC38BC', 'rgba(15, 12, 41, 0)'],
+      blendMode: 'screen',
+    },
+  ]}
+/>
+```
+
+</Preview>
+
+## Props
+
+<PropsTable of="gradient" />
+
+Every playback prop works too:
+
+<PropsTable of="playback" />

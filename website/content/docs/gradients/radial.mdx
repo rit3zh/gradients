@@ -1,0 +1,28 @@
+---
+title: "Radial"
+description: "Rings of color from a center, as a circle or an ellipse."
+---
+
+<GradientExample type="radial" />
+
+Color spreads outward from `center`. At `radius` 1 the last color reaches the corner farthest from the center, so the gradient always covers the view; smaller values leave the outer color to [`tileMode`](/docs/guides/colors#tile-modes).
+
+`shape="ellipse"` stretches the rings to the view's proportions, which suits wide banners and tall screens.
+
+<Swatches
+  items={[
+    { label: "Circle", note: "shape='circle'", gradient: { type: "radial", colors: ["#FDEFF9", "#EC38E3", "#3B095C", "#03001E"] } },
+    { label: "Ellipse", note: "shape='ellipse'", gradient: { type: "radial", shape: "ellipse", radius: 0.8, colors: ["#FDEFF9", "#EC38E3", "#3B095C", "#03001E"] } },
+    { label: "Off center", note: "center={[0.2, 0.8]}", gradient: { type: "radial", center: [0.2, 0.8], radius: 0.9, colors: ["#FDEFF9", "#EC38E3", "#3B095C", "#03001E"] } },
+  ]}
+/>
+
+## Motion
+
+`flow` sends the rings outward, like ripples. With the default `clamp` it switches to `mirror` so the rings breathe in and out seamlessly; use `tileMode="repeat"` with a closed palette for rings that keep travelling.
+
+## Props
+
+<PropsTable of="radial" />
+
+<SharedProps />

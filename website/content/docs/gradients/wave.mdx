@@ -1,0 +1,26 @@
+---
+title: "Wave"
+description: "Layered swells rolling across the view."
+---
+
+<GradientExample type="wave" />
+
+Wave stacks four sine swells of different lengths and speeds, then colors the view by height against them: toward the top takes the start of the palette, toward the bottom the end. The result looks like layered water or dunes in motion.
+
+`frequency` fits more swells across, `amplitude` makes them taller, and `angle` changes the direction they travel.
+
+<Swatches
+  items={[
+    { label: "Gentle", note: "amplitude={0.5}", gradient: { type: "wave", amplitude: 0.5, colors: ["#12C2E9", "#C471ED", "#F64F59"] } },
+    { label: "Default", note: "amplitude={1}", gradient: { type: "wave", colors: ["#12C2E9", "#C471ED", "#F64F59"] } },
+    { label: "Choppy", note: "frequency={3}", gradient: { type: "wave", frequency: 3, colors: ["#12C2E9", "#C471ED", "#F64F59"] } },
+  ]}
+/>
+
+`smoothness` eases the transition across each swell; lower values give sharper color bands.
+
+## Props
+
+<PropsTable of="wave" />
+
+<SharedProps />

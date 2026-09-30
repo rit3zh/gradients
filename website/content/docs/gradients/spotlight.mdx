@@ -1,0 +1,28 @@
+---
+title: "Spotlight"
+description: "A cone of light that sways from its origin."
+---
+
+<GradientExample type="spotlight" />
+
+Spotlight casts a cone from `origin`, pointing along `angle` (180 is straight down). The light is brightest at the source, falls off along the beam and fades at the cone's edges by `softness`. Outside the beam it's transparent.
+
+`spread` is the cone's width in degrees and `length` its reach, as a fraction of the view's diagonal.
+
+<Swatches
+  items={[
+    { label: "Narrow", note: "spread={20}", backdrop: "#0F0C29", gradient: { type: "spotlight", spread: 20, colors: ["#FDEFF9", "#EC38BC", "rgba(15, 12, 41, 0)"] } },
+    { label: "Wide", note: "spread={70}", backdrop: "#0F0C29", gradient: { type: "spotlight", spread: 70, colors: ["#FDEFF9", "#EC38BC", "rgba(15, 12, 41, 0)"] } },
+    { label: "From the side", note: "origin={[0, 0.2]}", backdrop: "#0F0C29", gradient: { type: "spotlight", origin: [0, 0.2], angle: 120, spread: 36, colors: ["#FDEFF9", "#EC38BC", "rgba(15, 12, 41, 0)"] } },
+  ]}
+/>
+
+## Motion
+
+With `speed` above zero the beam sways gently from side to side, like a stage light. `spin` turns it steadily instead.
+
+## Props
+
+<PropsTable of="spotlight" />
+
+<SharedProps />

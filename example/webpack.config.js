@@ -6,7 +6,7 @@ module.exports = async (env, argv) => {
     {
       ...env,
       babel: {
-        dangerouslyAddModulePathsToTranspile: ['expo-gradients'],
+        dangerouslyAddModulePathsToTranspile: ['@rit3zh/gradients'],
       },
     },
     argv

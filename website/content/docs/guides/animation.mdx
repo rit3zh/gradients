@@ -1,0 +1,97 @@
+---
+title: "Animation"
+description: "Motion without a single JavaScript frame. How speed, spin, flow and drift drive every layer."
+---
+
+Every layer has its own clock. On each display frame the native side advances it by the elapsed time multiplied by `speed`, and the shader reads it. Nothing crosses the bridge, nothing re-renders, and the JavaScript thread can be busy or blocked without a dropped frame.
+
+## What moves by default
+
+Some types are alive out of the box; others stay still until you give them motion.
+
+| Family | Types | Moves when |
+| --- | --- | --- |
+| Geometric | linear, radial, conic, sweep, diamond, reflected | `spin` or `flow` is set |
+| Surface | mesh, freeform, voronoi | `drift` is above 0 |
+| Procedural and flow | aurora, liquid, wave, silk, smoke, flux, interlace, strata, ribbon | Always (`speed` defaults to 1) |
+| Film | iridescent, holographic | Always (`speed` 0.35 and 0.4) |
+| Light | noise, glow, spotlight | `speed` is above 0 (defaults to 0) |
+| Static | bilinear, vignette, sky | Never |
+
+A layer that isn't moving isn't redrawn. When every layer in a view is still, the view stops asking for frames entirely.
+
+## speed
+
+`speed` scales a layer's clock. `0.5` is half speed, `2` is double, `0` freezes the motion while keeping the current frame.
+
+<Swatches
+  items={[
+    { label: "Slow", note: "speed={0.3}", gradient: { type: "liquid", speed: 0.3, colors: ["#3224AE", "#EC38BC", "#FF5F6D", "#FFC371"] } },
+    { label: "Default", note: "speed={1}", gradient: { type: "liquid", speed: 1, colors: ["#3224AE", "#EC38BC", "#FF5F6D", "#FFC371"] } },
+    { label: "Fast", note: "speed={2.5}", gradient: { type: "liquid", speed: 2.5, colors: ["#3224AE", "#EC38BC", "#FF5F6D", "#FFC371"] } },
+  ]}
+/>
+
+Because speed multiplies time rather than position, you can change it while the gradient is running and it simply accelerates. It never jumps.
+
+## spin
+
+`spin` rotates angle-based gradients in **degrees per second**. It works on linear, conic, sweep, diamond, reflected, spotlight, ribbon, wave, interlace, iridescent and holographic.
+
+```tsx
+<ConicGradient spin={20} />      {/* one turn every 18 seconds */}
+<SweepGradient spin={-45} />     {/* counter-clockwise */}
+```
+
+## flow
+
+`flow` scrolls the colors along the gradient without moving its geometry, in **gradient lengths per second**. It's the effect of a conveyor belt of color.
+
+<Swatches
+  items={[
+    { label: "Linear", note: "flow={0.25}", gradient: { type: "linear", angle: 90, flow: 0.25, colors: ["#FC5C7D", "#6A82FB", "#C471ED"] } },
+    { label: "Radial", note: "flow={0.8}", gradient: { type: "radial", radius: 1.45, flow: 0.8, colors: ["#FDEFF9", "#EC38E3", "#3B095C", "#03001E"] } },
+    { label: "Diamond", note: "flow={0.15}", gradient: { type: "diamond", flow: 0.15, colors: ["#FDB99B", "#CF8BF3", "#A770EF"] } },
+  ]}
+/>
+
+A ramp that scrolls needs to join up with itself. With the default `clamp` tile mode, flowing gradients switch to `mirror` automatically. Set `tileMode="repeat"` and close the palette (repeat the first color at the end) for a loop that runs in one direction.
+
+## drift
+
+Surface gradients animate their points. `drift` sets how far each point wanders along its own slow, seeded path. Mesh points on the edges only slide along their edge, so the surface always covers the view.
+
+<Swatches
+  tall
+  items={[
+    { label: "Mesh", note: "drift={0.9}", gradient: { type: "mesh", drift: 0.9, speed: 0.6, colors: ["#7303C0", "#FF0080", "#FCB045", "#3224AE", "#EC38BC", "#FF5F6D", "#6A82FB", "#C471ED", "#FD1D1D"] } },
+    { label: "Freeform", note: "drift={0.7}", gradient: { type: "freeform", drift: 0.7, speed: 0.5, colors: ["#FF0080", "#7303C0", "#FF8C00", "#3224AE"] } },
+    { label: "Voronoi", note: "drift={0.6}", gradient: { type: "voronoi", cells: 9, smoothness: 0.45, drift: 0.6, speed: 0.5, colors: ["#FF0080", "#FF5F6D", "#C471ED", "#7303C0", "#EC38BC"] } },
+  ]}
+/>
+
+## seed
+
+Anything random, such as drift paths, freeform point placement or the noise field, comes from `seed`. The same seed always gives the same result on both platforms, and a different one gives a new variation.
+
+```tsx
+{cards.map((card, index) => (
+  <FreeformGradient key={card.id} seed={index} drift={0.5} />
+))}
+```
+
+## paused
+
+`paused` freezes every clock in the view and stops rendering. The last frame stays on screen. Use it for anything off screen, in a background tab, or behind a modal.
+
+```tsx
+const isFocused = useIsFocused();
+
+<AuroraGradient paused={!isFocused} style={StyleSheet.absoluteFill} />
+```
+
+A paused gradient still picks up prop changes. Without a `transition` it redraws once with the new props; with one, the transition waits until the gradient resumes.
+
+## Props
+
+<PropsTable of="motion" />

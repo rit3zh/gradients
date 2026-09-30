@@ -3,9 +3,19 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@react-navigation/native": "^7.4.1",
+    "@react-navigation/native-stack": "^7.19.2",
+    "@shopify/flash-list": "2.0.2",
     "expo": "~57.0.25",
+    "expo-file-system": "~57.0.7",
     "react": "19.2.3",
-    "react-native": "0.86.3"
+    "react-native": "0.86.3",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screen-choreography": "^0.6.4",
+    "react-native-screens": "~4.26.0",
+    "react-native-teleport": "^1.2.2",
+    "react-native-worklets": "0.10.1"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",

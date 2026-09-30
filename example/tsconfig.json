@@ -3,8 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "expo-gradients": ["../src/index"],
-      "expo-gradients/*": ["../src/*"]
+      "@rit3zh/gradients": ["../src/index"],
+      "@rit3zh/gradients/*": ["../src/*"]
     }
   }
 }

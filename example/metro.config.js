@@ -20,7 +20,7 @@ config.resolver.nodeModulesPaths = [
 ];
 
 config.resolver.extraNodeModules = {
-  'expo-gradients': '..',
+  '@rit3zh/gradients': '..',
 };
 
 config.watchFolders = [path.resolve(__dirname, '..')];

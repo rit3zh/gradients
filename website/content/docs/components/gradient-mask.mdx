@@ -1,0 +1,49 @@
+---
+title: "GradientMask"
+description: "Show a gradient only where its children are opaque. Icons, shapes, images, whole layouts."
+---
+
+`GradientMask` renders its children as a mask: wherever they're opaque, the gradient shows through; wherever they're transparent, nothing does. It's `GradientText` generalised to any view.
+
+<Preview demo="mask" gradient={{ type: "mesh", drift: 0.8, speed: 0.5, colors: ["#FC5C7D", "#6A82FB", "#C471ED", "#FFC371", "#FF0080", "#7303C0", "#12C2E9", "#F64F59", "#3224AE"] }} backdrop="#0B0A12">
+
+```tsx
+import { GradientMask, MeshGradient } from '@rit3zh/gradients';
+
+<GradientMask
+  gradient={<MeshGradient drift={0.8} speed={0.5} colors={palette} />}
+  style={StyleSheet.absoluteFill}
+>
+  <View style={styles.grid}>
+    {apps.map((app) => (
+      <View key={app.id} style={styles.icon} />
+    ))}
+  </View>
+</GradientMask>
+```
+
+</Preview>
+
+One continuous gradient flows behind every shape in the mask, which is hard to fake with a gradient per shape.
+
+## Masks from anything
+
+The mask is the children's alpha, so it can be:
+
+- **Shapes:** views with `borderRadius`, or SVG paths from `react-native-svg`.
+- **Icons:** any icon font or image with transparency.
+- **Images:** a PNG logo becomes a gradient logo.
+
+```tsx
+<GradientMask gradient={<AuroraGradient />} style={{ width: 96, height: 96 }}>
+  <Image source={require('./logo.png')} style={{ width: 96, height: 96 }} />
+</GradientMask>
+```
+
+The gradient covers the mask's own bounds, so size the `GradientMask` like the content it wraps. The mask follows its children: change them and it updates.
+
+## Props
+
+<PropsTable of="mask" />
+
+`GradientMask` is a view and accepts every [playback prop](/docs/components/gradient#props).

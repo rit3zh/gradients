@@ -1,0 +1,4 @@
+{
+  "title": "Components",
+  "pages": ["gradient", "gradient-stack", "gradient-text", "gradient-mask", "gradient-border"]
+}

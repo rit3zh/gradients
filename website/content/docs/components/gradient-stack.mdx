@@ -1,0 +1,103 @@
+---
+title: "GradientStack"
+description: "Layer gradients as children and composite them in a single GPU pass."
+---
+
+`GradientStack` collects the gradient components among its children and draws them as layers, bottom to top, in one draw call. Every other child renders above the gradient as normal content.
+
+<Preview
+  layers={[
+    { type: "mesh", rows: 2, columns: 3, drift: 0.6, speed: 0.5, colors: ["#3224AE", "#7303C0", "#FF0080", "#EC38BC", "#FF5F6D", "#FFC371"] },
+    { type: "noise", colors: ["#000000", "#FFFFFF"], blendMode: "softLight", opacity: 0.35, scale: 4 },
+    { type: "vignette", intensity: 0.7 },
+  ]}
+>
+
+```tsx
+import { GradientStack, MeshGradient, NoiseGradient, VignetteGradient } from '@rit3zh/gradients';
+
+export function Hero() {
+  return (
+    <GradientStack style={styles.hero}>
+      <MeshGradient
+        rows={2}
+        columns={3}
+        drift={0.6}
+        speed={0.5}
+        colors={['#3224AE', '#7303C0', '#FF0080', '#EC38BC', '#FF5F6D', '#FFC371']}
+      />
+      <NoiseGradient colors={['#000000', '#FFFFFF']} blendMode="softLight" opacity={0.35} scale={4} />
+      <VignetteGradient intensity={0.7} />
+
+      <Text style={styles.title}>Midnight Mix</Text>
+    </GradientStack>
+  );
+}
+```
+
+</Preview>
+
+## Layers and content
+
+Children are sorted by what they are:
+
+- **Gradient components** become layers. Their gradient options (colors, blend mode, speed and so on) are used; view props such as `style` or `paused` on a layer are ignored.
+- **Everything else** is content, rendered on top in order, like the children of a `View`.
+
+Layers keep their own clocks, so a spinning conic and a drifting mesh in the same stack each move at their own speed.
+
+## Playback
+
+Playback props live on the stack and apply to every layer: `paused`, `transition`, `keyframes`, `loop`, `dither`, `grain` and `deviceMotion`.
+
+```tsx
+<GradientStack paused={!isFocused} transition={{ type: 'spring' }} grain={0.2}>
+  <AuroraGradient colors={palette} />
+  <VignetteGradient />
+</GradientStack>
+```
+
+With `transition`, changing any layer's props animates. Changing the number of layers crossfades between the old and new stack.
+
+## Keyframes
+
+Keyframes on a stack are complete layer lists, in the shape of the [`layers`](/docs/components/gradient#layers) prop:
+
+```tsx
+<GradientStack
+  keyframes={[
+    [
+      { type: 'aurora', colors: ['#00F5A0', '#00D9F5', '#7B61FF'] },
+      { type: 'vignette', intensity: 0.9 },
+    ],
+  ]}
+  transition={{ duration: 3000, easing: 'smooth' }}
+>
+  <AuroraGradient colors={['#7303C0', '#EC38BC', '#FF0080']} />
+  <VignetteGradient intensity={0.6} />
+</GradientStack>
+```
+
+## As an element
+
+A stack can be passed wherever a gradient element is expected, so layered gradients work in [`GradientText`](/docs/components/gradient-text), [`GradientMask`](/docs/components/gradient-mask) and [`GradientBorder`](/docs/components/gradient-border):
+
+```tsx
+<GradientText
+  gradient={
+    <GradientStack>
+      <LinearGradient colors={['#FC5C7D', '#6A82FB']} />
+      <NoiseGradient colors={['#000', '#fff']} blendMode="overlay" opacity={0.3} scale={8} />
+    </GradientStack>
+  }
+  style={styles.headline}
+>
+  Grain
+</GradientText>
+```
+
+## Props
+
+<PropsTable of="stack" />
+
+The stack is a view and accepts every [playback prop](/docs/components/gradient#props).

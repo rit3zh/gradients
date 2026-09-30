@@ -1,0 +1,26 @@
+---
+title: "Aurora"
+description: "Curtains of light rippling over the night sky."
+---
+
+<GradientExample type="aurora" />
+
+Aurora draws up to six bands of light, each a curtain with a bright lower edge, soft rays rising above it and a slow ripple along its length. Each band takes the next part of your palette.
+
+The layer is transparent where there's no light, so it composes naturally over a dark backdrop, a [sky](/docs/gradients/sky), or a photo with `blendMode="screen"`.
+
+<Swatches
+  items={[
+    { label: "One band", note: "bands={1}", backdrop: "#03001E", gradient: { type: "aurora", bands: 1, colors: ["#00F5A0", "#00D9F5"] } },
+    { label: "Classic", note: "default", backdrop: "#03001E", gradient: { type: "aurora", colors: ["#00F5A0", "#00D9F5", "#7B61FF", "#FF4FD8"] } },
+    { label: "Dense", note: "bands={6}", backdrop: "#03001E", gradient: { type: "aurora", bands: 6, intensity: 0.8, colors: ["#7303C0", "#EC38BC", "#FF0080"] } },
+  ]}
+/>
+
+`softness` controls how gently each curtain fades at its lower edge, and `intensity` brightens the whole display.
+
+## Props
+
+<PropsTable of="aurora" />
+
+<SharedProps />

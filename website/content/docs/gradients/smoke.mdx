@@ -1,0 +1,24 @@
+---
+title: "Smoke"
+description: "Plumes twisting through each other."
+---
+
+<GradientExample type="smoke" />
+
+Smoke advects the view through eight layers of swirling motion, so the palette curls into plumes that rise and twist. Dark palettes with a single light color read as smoke; bright ones read as ink in water.
+
+`turbulence` sets how hard the plumes twist, `scale` how large they are.
+
+<Swatches
+  items={[
+    { label: "Calm", note: "turbulence={0.3}", gradient: { type: "smoke", turbulence: 0.3, colors: ["#03001E", "#7303C0", "#EC38BC", "#FDEFF9"] } },
+    { label: "Default", note: "turbulence={0.6}", gradient: { type: "smoke", colors: ["#03001E", "#7303C0", "#EC38BC", "#FDEFF9"] } },
+    { label: "Wild", note: "turbulence={1.2}", gradient: { type: "smoke", turbulence: 1.2, colors: ["#03001E", "#7303C0", "#EC38BC", "#FDEFF9"] } },
+  ]}
+/>
+
+## Props
+
+<PropsTable of="smoke" />
+
+<SharedProps />

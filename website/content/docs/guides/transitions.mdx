@@ -1,0 +1,92 @@
+---
+title: "Transitions"
+description: "Animate between prop values on the native side with timing curves or springs."
+---
+
+Set `transition` and any prop change animates instead of snapping. React renders once with the new props; the native side interpolates colors, stops, angles, centers and every other numeric option until it arrives.
+
+<Preview
+  cycle={[
+    { type: "mesh", rows: 2, columns: 3, drift: 0.4, speed: 0.4, colors: ["#833AB4", "#FD1D1D", "#FCB045", "#7303C0", "#FF0080", "#FF5F6D"] },
+    { type: "mesh", rows: 2, columns: 3, drift: 0.4, speed: 0.4, colors: ["#03001E", "#7303C0", "#EC38BC", "#3224AE", "#FF66FF", "#FDEFF9"] },
+    { type: "mesh", rows: 2, columns: 3, drift: 0.4, speed: 0.4, colors: ["#FC5C7D", "#6A82FB", "#C471ED", "#FF5F6D", "#FFC371", "#FF0080"] },
+  ]}
+  interval={2800}
+  transition={{ type: "spring", damping: 16, stiffness: 70 }}
+  caption="The palette changes every 2.8 seconds; a spring carries it across."
+>
+
+```tsx
+const palettes = [
+  ['#833AB4', '#FD1D1D', '#FCB045', '#7303C0', '#FF0080', '#FF5F6D'],
+  ['#03001E', '#7303C0', '#EC38BC', '#3224AE', '#FF66FF', '#FDEFF9'],
+  ['#FC5C7D', '#6A82FB', '#C471ED', '#FF5F6D', '#FFC371', '#FF0080'],
+];
+
+export function Backdrop() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setIndex((value) => (value + 1) % palettes.length), 2800);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <MeshGradient
+      style={StyleSheet.absoluteFill}
+      rows={2}
+      columns={3}
+      colors={palettes[index]}
+      drift={0.4}
+      speed={0.4}
+      transition={{ type: 'spring', damping: 16, stiffness: 70 }}
+    />
+  );
+}
+```
+
+</Preview>
+
+## Timing
+
+A timing transition runs for a fixed duration along an easing curve. `transition={true}` is shorthand for 600 ms with `easeInOut`.
+
+```tsx
+<LinearGradient
+  colors={selected ? ['#12C2E9', '#C471ED'] : ['#F64F59', '#FFC371']}
+  transition={{ duration: 400, easing: 'easeOut' }}
+/>
+```
+
+<PropsTable of="timing" />
+
+## Spring
+
+A spring has no duration. It settles when its remaining motion drops below a thousandth of the distance. If the props change again before it settles, the next transition starts from whatever is on screen at that moment, so nothing ever jumps.
+
+```tsx
+<RadialGradient
+  center={touch}
+  transition={{ type: 'spring', damping: 14, stiffness: 120 }}
+/>
+```
+
+<PropsTable of="spring" />
+
+## What interpolates
+
+Numbers, points and colors blend smoothly between old and new values. Colors blend sample by sample across the whole ramp, so a palette with a different number of colors still morphs cleanly.
+
+Some changes can't be blended field by field. The layer then crossfades from the old look to the new one over the same transition:
+
+- a different gradient `type`,
+- a different `blendMode`, `tileMode` or `interpolation`,
+- a mesh with a different number of `rows` or `columns`,
+- a different number of points or point colors,
+- a different number of layers in a stack.
+
+Motion keeps running through a transition. A layer that keeps its type keeps its clock, so a spinning gradient doesn't rewind when its colors change.
+
+## Transitions and keyframes
+
+The same `transition` also sets the pace of [keyframes](/docs/guides/keyframes): it's how the gradient travels from one keyframe to the next.

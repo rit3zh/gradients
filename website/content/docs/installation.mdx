@@ -1,0 +1,75 @@
+---
+title: "Installation"
+description: "Add Gradients to an Expo or React Native project and build it into your app."
+---
+
+## Requirements
+
+- An Expo project using a [development build](https://docs.expo.dev/develop/development-builds/introduction/), or a bare React Native app with Expo Modules installed.
+- iOS 16.4 or later. Android devices need OpenGL ES 3.0, which every current device supports.
+- The example app, and every benchmark in these docs, runs on Expo SDK 57 with React Native 0.86.
+
+<Callout type="warn" title="Expo Go can't load it">
+  Expo Go only contains the native code that ships with it. Since Gradients brings its own Metal and OpenGL renderers, it needs a development build.
+</Callout>
+
+## Install
+
+<Steps>
+<Step>
+
+### Add the package
+
+`expo install` picks the version that matches your SDK.
+
+<CommandTabs
+  groupId="package-manager"
+  commands={{
+    npx: "npx expo install @rit3zh/gradients",
+    bun: "bunx expo install @rit3zh/gradients",
+    pnpm: "pnpm dlx expo install @rit3zh/gradients",
+    yarn: "yarn dlx expo install @rit3zh/gradients",
+  }}
+/>
+
+</Step>
+<Step>
+
+### Rebuild the native app
+
+The package contains native code, so the app has to be compiled again. There is no config plugin to add.
+
+<CommandTabs
+  label="Platform"
+  commands={{
+    iOS: "npx expo run:ios",
+    Android: "npx expo run:android",
+  }}
+/>
+
+For EAS, start a new development build with `eas build --profile development`. In a bare app, run `npx pod-install` before building for iOS.
+
+</Step>
+<Step>
+
+### Render a gradient
+
+```tsx title="App.tsx"
+import { LinearGradient } from '@rit3zh/gradients';
+import { StyleSheet } from 'react-native';
+
+export default function App() {
+  return <LinearGradient style={StyleSheet.absoluteFill} colors={['#833AB4', '#FD1D1D', '#FCB045']} />;
+}
+```
+
+</Step>
+</Steps>
+
+## Troubleshooting
+
+**`Cannot find native module 'ExpoGradients'`** means the running binary was built before the package was added. Rebuild with `npx expo run:ios` or `npx expo run:android`, or create a new development build.
+
+**The gradient is blank.** A gradient view has no intrinsic size. Give it one with `style`, for example `flex: 1`, explicit dimensions or `StyleSheet.absoluteFill`.
+
+**Colors look different from another library.** Gradients blends in OKLab by default, which keeps midpoints bright. Pass `interpolation="srgb"` to match the browser and most other libraries. See [Colors and stops](/docs/guides/colors).

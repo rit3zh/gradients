@@ -1,0 +1,27 @@
+---
+title: "Iridescent"
+description: "Thin-film color with a moving sheen, like the inside of a shell."
+---
+
+<GradientExample type="iridescent" tone="dark" />
+
+Iridescent simulates light interfering in a thin film: color depends on the film's thickness and the angle you look from, which is why it shifts across the surface and with tilt. The default spectrum is pearly and pastel.
+
+With `colors`, the film blends toward your palette. `paletteMix` controls how much, from pure physics (`0`) to fully your colors (`1`); it defaults to `0.7` when colors are given.
+
+<Swatches
+  tall
+  items={[
+    { label: "Pearl", note: "default", gradient: { type: "iridescent" } },
+    { label: "Tinted", note: "colors", gradient: { type: "iridescent", colors: ["#7B61FF", "#FF5FA2", "#FFB86B"] } },
+    { label: "Banded", note: "bands={3}", gradient: { type: "iridescent", bands: 3, sheen: 0.4 } },
+  ]}
+/>
+
+Turn on `deviceMotion` and the film responds to tilt, which is striking on cards and hero images.
+
+## Props
+
+<PropsTable of="iridescent" />
+
+<SharedProps />

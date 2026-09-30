@@ -1,0 +1,131 @@
+---
+title: "Performance"
+description: "How the renderer stays cheap, what the benchmarks show, and how to keep your screens fast."
+---
+
+## At a glance
+
+- **A static gradient costs nothing after its first frame.** Nothing runs per frame until a prop changes.
+- **One full-screen animated gradient takes 0.2 to 0.4 ms of main-thread time per frame on iOS**, for every type except drifting meshes (0.8 ms).
+- **On Android, rendering never touches the UI thread.** Gradients render on a dedicated thread paced by `Choreographer`.
+- **24 animated gradients on one screen:** iOS holds 60 fps with no dropped frames. Android keeps the display at 60 fps and each view animates at 41 to 47 fps, because a frame budget makes views take turns instead of stalling.
+- **The JavaScript thread is unaffected in every scenario.** Nothing runs on it per frame.
+
+## How it stays fast
+
+| Technique | Effect |
+| --- | --- |
+| Render on change | Static gradients draw once. No display link or frame callback runs while nothing changes. |
+| One pass for all layers | A `GradientStack` of any depth composites in a single fragment pass. |
+| Specialized shaders | Views with a single gradient type use a shader built only for that type, compiled off the main thread. A generic shader renders meanwhile. |
+| Per-type resolution | Smooth fields render below native resolution and are upscaled: geometric types at 2×, procedural at 1.5×, surfaces and lighting at 1×. Holographic and interlace stay native for their fine detail. |
+| Cached mesh surfaces | Meshes are re-tessellated only when their points move. |
+| Shared frame clock | On iOS one `CADisplayLink` drives every view. On Android one render thread renders every view. |
+| Frame budget (Android) | The render thread stops at 75% of the frame period and continues with the remaining views on the next vsync. |
+| Drawable pooling (iOS) | Static views keep 2 drawables, animated views 3. |
+| Paused when hidden | Views that are off-window, hidden or `paused` do no work. |
+
+## Benchmarks
+
+Release builds of the example app, on an Apple M5 Mac. Each scenario warms up for 1 second and is measured for 3 with the built-in [profiler](/docs/api/gradient-profiler). Simulators and emulators are a relative baseline: run the same benchmark on your target devices before shipping.
+
+### iOS
+
+iPhone 17 Pro Max Simulator, iOS 26.5. The Simulator caps the display at 60 Hz and doesn't report representative GPU times.
+
+| Scenario | FPS | Dropped | Main thread p50 / p95 | GPU memory |
+| --- | --- | --- | --- | --- |
+| Static linear | idle | 0 | 0 / 0 ms | 11.3 MB |
+| Linear spin | 60 | 0 | 0.22 / 0.36 ms | 17.1 MB |
+| Conic spin | 60 | 0 | 0.32 / 0.40 ms | 17.1 MB |
+| Mesh 4×4 drift | 60 | 0 | 0.81 / 1.01 ms | 7.3 MB |
+| Aurora | 60 | 0 | 0.32 / 0.39 ms | 9.7 MB |
+| Liquid | 60 | 0 | 0.28 / 0.38 ms | 9.7 MB |
+| Holographic | 60 | 0 | 0.35 / 0.42 ms | 38.3 MB |
+| Stack, three layers | 60 | 0 | 0.48 / 0.71 ms | 12.5 MB |
+| Gradient text | 60 | 0 | 0.30 / 0.38 ms | 0.7 MB |
+| 12 animated views | 60 | 0 | 0.44 / 0.56 ms | 11.2 MB |
+| 24 animated views | 60 | 0 | 0.75 / 1.29 ms | 13.9 MB |
+
+### Android
+
+Pixel 9 Pro emulator, Android 17, 4 cores. Times are on the render thread, not the UI thread.
+
+| Scenario | FPS | Dropped | Render thread p50 / p95 | GPU memory |
+| --- | --- | --- | --- | --- |
+| Static linear | idle | 0 | 0 / 0 ms | 16.5 MB |
+| Linear spin | 60 | 0 | 1.13 / 2.05 ms | 16.5 MB |
+| Mesh 4×4 drift | 60 | 0 | 2.36 / 4.90 ms | 5.5 MB |
+| Aurora | 59 | 2 | 1.72 / 4.32 ms | 9.3 MB |
+| Holographic | 60 | 0 | 1.92 / 3.34 ms | 37.1 MB |
+| Stack, three layers | 60 | 0 | 0.74 / 1.56 ms | 10.7 MB |
+| 12 animated views | 60 | 21 | 10.95 / 12.53 ms | 8.3 MB |
+| 24 animated views | 60 | 1422 | 12.76 / 13.20 ms | 8.8 MB |
+
+The emulator translates OpenGL ES calls to the host GPU, and about 90% of each view's cost there is EGL surface switching and buffer swaps. Physical devices have far cheaper EGL calls. With 24 views, "dropped" counts frames individual views skipped while the frame budget rotated through them; the display itself stays at 60 fps.
+
+The full results, including CPU and every scenario, are in [PERFORMANCE.md](https://github.com/rit3zh/expo-gradients/blob/main/PERFORMANCE.md).
+
+## Recommendations
+
+<Steps>
+<Step>
+
+### Pause what you can't see
+
+Pass `paused` for off-screen list items, screens that lost focus and anything behind a modal. With FlashList or FlatList, drive it from viewability:
+
+```tsx
+const [visible, setVisible] = useState(new Set<string>());
+
+<FlashList
+  data={cards}
+  onViewableItemsChanged={({ viewableItems }) =>
+    setVisible(new Set(viewableItems.map((item) => item.key)))
+  }
+  renderItem={({ item }) => <MeshGradient paused={!visible.has(item.id)} drift={0.6} />}
+/>
+```
+
+</Step>
+<Step>
+
+### Prefer still gradients where motion adds nothing
+
+They cost nothing after the first frame, and a subtle `transition` on state changes often reads as more polished than constant motion.
+
+</Step>
+<Step>
+
+### Keep animated views reasonable on Android
+
+Up to about 12 held full rate in testing. Beyond that the frame budget keeps the UI smooth, but each view animates at a lower rate.
+
+</Step>
+<Step>
+
+### Limit drifting meshes
+
+A drifting mesh re-tessellates on the CPU every frame. One or two per screen is comfortable. Freeform and voronoi move only a handful of points and blend them in the shader, so they drift for far less (0.32 ms against 0.81 ms per frame on iOS).
+
+</Step>
+<Step>
+
+### Use full-resolution types deliberately
+
+Holographic and interlace render at native resolution to keep glints and fine lines crisp. That's about 38 MB for a full-screen view on a 3× display, against 10 to 17 MB for other types.
+
+</Step>
+</Steps>
+
+## Measure it yourself
+
+The example app includes the benchmark behind these numbers. Open it from the **Benchmark** button in the gallery, on a Release build:
+
+```bash
+cd example
+npx expo run:ios --configuration Release --device
+npx expo run:android --variant release
+```
+
+In your own app, [`GradientProfiler`](/docs/api/gradient-profiler) measures whatever is on screen and costs nothing while it isn't running.

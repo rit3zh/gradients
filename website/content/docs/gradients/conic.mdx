@@ -1,0 +1,24 @@
+---
+title: "Conic"
+description: "A full turn of color around a center. Also exported as AngularGradient."
+---
+
+<GradientExample type="conic" />
+
+Colors sweep clockwise around `center`, starting at `angle` (0 is straight up). The default palette repeats its first color at the end so the turn closes without a seam; do the same with your own colors unless you want a hard edge.
+
+```tsx
+<ConicGradient colors={['#FC00FF', '#7303C0', '#FF0080', '#FC00FF']} />
+```
+
+`AngularGradient` is the same component under another name, for anyone coming from design tools that call it that.
+
+## Motion
+
+`spin` turns the whole wheel. It's the classic animated border when used inside a [`GradientBorder`](/docs/components/gradient-border). `flow` cycles the colors around a still wheel instead.
+
+## Props
+
+<PropsTable of="conic" />
+
+<SharedProps />

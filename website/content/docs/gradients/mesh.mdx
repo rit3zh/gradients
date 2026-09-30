@@ -1,0 +1,45 @@
+---
+title: "Mesh"
+description: "A bicubic mesh of colored control points, optionally drifting."
+---
+
+<GradientExample type="mesh" />
+
+A mesh places one color at each point of a `rows × columns` grid and fills the space between them with smooth bicubic patches. It's the signature look of modern wallpapers and onboarding screens.
+
+`colors` lists one color per point, row by row. With fewer colors than points, the list repeats.
+
+```tsx
+<MeshGradient
+  rows={2}
+  columns={2}
+  colors={['#FF6B6B', '#FFD166', '#4D96FF', '#6BCB77']}
+/>
+```
+
+## Moving the points
+
+`points` repositions the control points explicitly, in unit coordinates and in the same order as `colors`. There must be exactly `rows × columns` of them. Moving the inner points pulls colors into organic shapes; with a [transition](/docs/guides/transitions), they glide.
+
+`drift` sets them wandering on their own. Edge points only slide along their edge, so the mesh always covers the view.
+
+## Smoothness
+
+`smoothness` blends between straight bilinear patches (`0`) and a spline that curves through every point (`1`, the default).
+
+<Swatches
+  items={[
+    { label: "Spline", note: "smoothness={1}", gradient: { type: "mesh", rows: 3, columns: 3, colors: ["#7303C0", "#FF0080", "#FCB045", "#3224AE", "#EC38BC", "#FF5F6D", "#6A82FB", "#C471ED", "#FD1D1D"] } },
+    { label: "Linear", note: "smoothness={0}", gradient: { type: "mesh", rows: 3, columns: 3, smoothness: 0, colors: ["#7303C0", "#FF0080", "#FCB045", "#3224AE", "#EC38BC", "#FF5F6D", "#6A82FB", "#C471ED", "#FD1D1D"] } },
+  ]}
+/>
+
+<Callout type="tip" title="Cost">
+  A still mesh is tessellated once and cached. A drifting mesh re-tessellates on the CPU every frame, so keep it to one or two on screen. See [Performance](/docs/guides/performance#recommendations).
+</Callout>
+
+## Props
+
+<PropsTable of="mesh" />
+
+<SharedProps />

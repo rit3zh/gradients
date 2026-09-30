@@ -1,0 +1,30 @@
+---
+title: "Glow"
+description: "A soft light source that can breathe."
+---
+
+<GradientExample type="glow" />
+
+Glow is a radial light with an exponential falloff: bright in the core, fading smoothly to nothing. It's transparent outside the light, so it sits over anything: a dark backdrop, a photo, or other layers in a stack with `blendMode="screen"`.
+
+The default palette fades from violet to transparent pink; for your own, end on a transparent color.
+
+```tsx
+<GlowGradient
+  center={[0.5, 0.35]}
+  radius={0.9}
+  colors={['rgba(255, 102, 255, 0.95)', 'rgba(115, 3, 192, 0.5)', 'rgba(115, 3, 192, 0)']}
+/>
+```
+
+`radius` is measured in halves of the view's shorter side, `falloff` shapes the edge (higher is a tighter core), and `intensity` scales the brightness.
+
+## Motion
+
+Glow is still by default. With `speed` above zero it breathes: the radius swells and settles on a slow cycle, which makes a lovely idle state for a record button or an assistant orb.
+
+## Props
+
+<PropsTable of="glow" />
+
+<SharedProps />

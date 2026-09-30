@@ -1,0 +1,56 @@
+---
+title: "createGradient"
+description: "Make your own named gradient component with its own view and playback defaults."
+---
+
+Every typed component in the library, from `LinearGradient` to `StrataGradient`, is made with `createGradient`. Use it for components of your own that carry defaults: a design-system background, a card finish, a loading shimmer.
+
+```tsx
+import { createGradient } from '@rit3zh/gradients';
+
+export const FoilCard = createGradient('holographic', 'FoilCard', {
+  deviceMotion: true,
+  grain: 0.08,
+  style: { borderRadius: 20, overflow: 'hidden' },
+});
+```
+
+```tsx
+<FoilCard style={{ width: 320, height: 200 }} sparkle={1.2} />
+```
+
+The result behaves exactly like a built-in gradient component: typed props for its gradient type, usable on its own, as a layer in a [`GradientStack`](/docs/components/gradient-stack), or as the `gradient` of `GradientText`, `GradientMask` and `GradientBorder`.
+
+## Signature
+
+```ts
+function createGradient<T extends TGradientType>(
+  type: T,
+  displayName: string,
+  defaults?: Partial<IGradientView>,
+): TGradientComponent<T>;
+```
+
+<PropsTable of="createGradient" />
+
+## What defaults can hold
+
+`defaults` holds view-level props: `style`, `paused`, `transition`, `loop`, `dither`, `grain`, `deviceMotion` and regular `View` props. This is how `HolographicGradient` turns device motion on:
+
+```ts
+const HolographicGradient = createGradient('holographic', 'HolographicGradient', {
+  deviceMotion: true,
+});
+```
+
+To fix gradient options such as colors, wrap the component instead:
+
+```tsx
+export function BrandGradient(props: TGradientOf<'mesh'>) {
+  return <MeshGradient colors={brand.mesh} drift={0.6} speed={0.4} {...props} />;
+}
+```
+
+<Callout title="Inside a stack">
+  Layers in a `GradientStack` only contribute their gradient options. View defaults like `grain` or `deviceMotion` apply when the component renders on its own, and are set on the stack otherwise.
+</Callout>

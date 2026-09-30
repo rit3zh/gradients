@@ -1,0 +1,43 @@
+---
+title: "GradientProfiler"
+description: "Measure frame times, GPU time and memory of the gradients on screen, on a real device."
+---
+
+`GradientProfiler` measures every gradient on screen while it runs and returns one report with the same shape on iOS and Android. It costs nothing while it isn't running, so it's safe to leave in production builds behind a debug menu.
+
+```tsx
+import { GradientProfiler } from '@rit3zh/gradients';
+
+const report = await GradientProfiler.measure(3000);
+
+console.log(`${report.fps.toFixed(0)} fps, ${report.droppedFrames} dropped`);
+console.log(`CPU p95 ${report.cpu.p95.toFixed(2)} ms, GPU p95 ${report.gpu?.p95.toFixed(2) ?? 'n/a'} ms`);
+console.log(`${(report.memory / 1024 / 1024).toFixed(1)} MB of GPU memory`);
+```
+
+## Methods
+
+<PropsTable of="profiler" />
+
+Use `start` and `stop` around an interaction, such as a scroll or a transition:
+
+```tsx
+GradientProfiler.start();
+await runScrollBenchmark();
+const report = GradientProfiler.stop();
+```
+
+## Report
+
+<PropsTable of="report" />
+
+`IPerformanceSummary` has `mean`, `p50`, `p95` and `max` in milliseconds, plus `samples`, the number of values behind them.
+
+## Reading the numbers
+
+- **`fps` of 0 is good news on a still screen.** It counts frames where a gradient rendered, and still gradients don't.
+- **`cpu` is the cost on the main thread on iOS**, and on the gradient render thread on Android. The Android UI thread isn't involved at all.
+- **`gpu` is `null`** where the driver can't time GPU work, such as Android emulators without timer queries. The iOS Simulator reports GPU times, but they don't represent real hardware.
+- **Measure Release builds on devices.** Debug builds and simulators are fine for comparing two approaches, not for absolute numbers.
+
+See [Performance](/docs/guides/performance) for reference results and what drives them.

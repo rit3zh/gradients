@@ -1,0 +1,32 @@
+---
+title: "Interlace"
+description: "A folded cosine sheet, woven with fine alternating lines."
+---
+
+<GradientExample type="interlace" />
+
+Interlace maps your palette over a folded sheet and weaves it with hundreds of fine lines. Alternate lines are slightly darker, which gives a printed, almost textile look.
+
+The palette repeats across the sheet (`tileMode="repeat"`), so close it by repeating the first color at the end. Otherwise you'll see a hard seam where the last color meets the first.
+
+```tsx
+<InterlaceGradient colors={['#4568DC', '#B06AB3', '#FF5F6D', '#4568DC']} />
+```
+
+`density` sets the number of lines, `depth` their contrast and `frequency` how tightly the sheet folds.
+
+<Swatches
+  items={[
+    { label: "Fine", note: "density={128}", gradient: { type: "interlace", colors: ["#4568DC", "#B06AB3", "#FF5F6D", "#4568DC"] } },
+    { label: "Coarse", note: "density={40}", gradient: { type: "interlace", density: 40, colors: ["#4568DC", "#B06AB3", "#FF5F6D", "#4568DC"] } },
+    { label: "Smooth", note: "depth={0}", gradient: { type: "interlace", depth: 0, colors: ["#4568DC", "#B06AB3", "#FF5F6D", "#4568DC"] } },
+  ]}
+/>
+
+It renders at native resolution so the lines stay crisp.
+
+## Props
+
+<PropsTable of="interlace" />
+
+<SharedProps />

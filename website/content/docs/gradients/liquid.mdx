@@ -1,0 +1,26 @@
+---
+title: "Liquid"
+description: "Domain-warped, glossy flow, like paint poured into water."
+---
+
+<GradientExample type="liquid" />
+
+Liquid warps noise through noise twice over, which folds the color ramp into flowing ribbons and eddies. A glossy `highlight` rides the ridges, so it reads as a wet, reflective surface.
+
+`warp` sets how tightly the flow folds, `scale` how large the eddies are.
+
+<Swatches
+  items={[
+    { label: "Calm", note: "warp={0.8}", gradient: { type: "liquid", warp: 0.8, colors: ["#3224AE", "#EC38BC", "#FF5F6D", "#FFC371"] } },
+    { label: "Default", note: "warp={1.8}", gradient: { type: "liquid", colors: ["#3224AE", "#EC38BC", "#FF5F6D", "#FFC371"] } },
+    { label: "Glossy", note: "highlight={0.8}", gradient: { type: "liquid", highlight: 0.8, colors: ["#3224AE", "#EC38BC", "#FF5F6D", "#FFC371"] } },
+  ]}
+/>
+
+Liquid moves on its own. `speed` around `0.4` to `0.6` keeps it hypnotic rather than busy.
+
+## Props
+
+<PropsTable of="liquid" />
+
+<SharedProps />

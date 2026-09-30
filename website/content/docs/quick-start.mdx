@@ -1,0 +1,140 @@
+---
+title: "Quick start"
+description: "A gradient on screen in one line, then animated, layered and painted onto text."
+---
+
+Every example below is a full screen you can paste into an app. Each step adds one idea.
+
+## A static gradient
+
+Import the component for the type you want and give it a size. This one fills its parent:
+
+<Preview gradient={{ type: "linear", colors: ["#833AB4", "#FD1D1D", "#FCB045"], angle: 160 }}>
+
+```tsx
+import { LinearGradient } from '@rit3zh/gradients';
+import { StyleSheet } from 'react-native';
+
+export function Background() {
+  return (
+    <LinearGradient
+      style={StyleSheet.absoluteFill}
+      colors={['#833AB4', '#FD1D1D', '#FCB045']}
+      angle={160}
+    />
+  );
+}
+```
+
+</Preview>
+
+The gradient is drawn once. Until a prop changes, it costs nothing.
+
+## Make it move
+
+Motion is a prop, not a loop you write. `spin` turns the gradient in degrees per second and `flow` scrolls its colors. The animation runs on the native frame clock, so the JavaScript thread stays idle.
+
+<Preview gradient={{ type: "conic", colors: ["#FC00FF", "#7303C0", "#FF0080", "#FF5F6D", "#FC00FF"], spin: 20 }}>
+
+```tsx
+<ConicGradient
+  style={StyleSheet.absoluteFill}
+  colors={['#FC00FF', '#7303C0', '#FF0080', '#FF5F6D', '#FC00FF']}
+  spin={20}
+/>
+```
+
+</Preview>
+
+Surface gradients move their points instead. A mesh with `drift` lets every control point wander on its own path:
+
+<Preview gradient={{ type: "mesh", rows: 3, columns: 3, drift: 0.9, speed: 0.6, colors: ["#7303C0", "#FF0080", "#FCB045", "#3224AE", "#EC38BC", "#FF5F6D", "#6A82FB", "#C471ED", "#FD1D1D"] }}>
+
+```tsx
+<MeshGradient
+  style={StyleSheet.absoluteFill}
+  rows={3}
+  columns={3}
+  drift={0.9}
+  speed={0.6}
+  colors={[
+    '#7303C0', '#FF0080', '#FCB045',
+    '#3224AE', '#EC38BC', '#FF5F6D',
+    '#6A82FB', '#C471ED', '#FD1D1D',
+  ]}
+/>
+```
+
+</Preview>
+
+Read [Animation](/docs/guides/animation) for how `speed`, `spin`, `flow` and `drift` work together.
+
+## Layer it
+
+A `GradientStack` turns its gradient children into layers and composites them in one GPU pass. Here a drifting mesh gets soft-light noise for texture and a vignette to frame it:
+
+<Preview
+  layers={[
+    { type: "mesh", rows: 2, columns: 3, drift: 0.6, speed: 0.5, colors: ["#3224AE", "#7303C0", "#FF0080", "#EC38BC", "#FF5F6D", "#FFC371"] },
+    { type: "noise", colors: ["#000000", "#FFFFFF"], blendMode: "softLight", opacity: 0.35, scale: 4 },
+    { type: "vignette", intensity: 0.7 },
+  ]}
+>
+
+```tsx
+import { GradientStack, MeshGradient, NoiseGradient, VignetteGradient } from '@rit3zh/gradients';
+
+<GradientStack style={StyleSheet.absoluteFill}>
+  <MeshGradient
+    rows={2}
+    columns={3}
+    drift={0.6}
+    speed={0.5}
+    colors={['#3224AE', '#7303C0', '#FF0080', '#EC38BC', '#FF5F6D', '#FFC371']}
+  />
+  <NoiseGradient colors={['#000000', '#FFFFFF']} blendMode="softLight" opacity={0.35} scale={4} />
+  <VignetteGradient intensity={0.7} />
+</GradientStack>
+```
+
+</Preview>
+
+## Paint text
+
+`GradientText` takes any gradient element and uses the text as its mask. The gradient keeps animating inside the glyphs.
+
+<Preview demo="text" text="Aa" gradient={{ type: "silk", speed: 0.8, colors: ["#FC00FF", "#FF5F6D", "#FFC371"] }}>
+
+```tsx
+import { GradientText, SilkGradient } from '@rit3zh/gradients';
+
+<GradientText
+  gradient={<SilkGradient speed={0.8} colors={['#FC00FF', '#FF5F6D', '#FFC371']} />}
+  style={{ fontSize: 120, fontWeight: '800' }}
+>
+  Aa
+</GradientText>
+```
+
+</Preview>
+
+## Pause what isn't visible
+
+Animated gradients keep working while they are on screen. In a list, pause the ones that scroll away:
+
+```tsx
+<LiquidGradient paused={!isVisible} style={styles.card} />
+```
+
+A paused gradient keeps its last frame and does no work at all. See [Performance](/docs/guides/performance) for the rest of the checklist.
+
+## Where to go next
+
+<Cards>
+  <Card href="/docs/gradients" title="Browse every gradient">
+    Live previews and props for all 27 types.
+  </Card>
+  <Card href="/docs/guides/transitions" title="Transitions">
+    Spring or ease between prop values natively.
+  </Card>
+</Cards>

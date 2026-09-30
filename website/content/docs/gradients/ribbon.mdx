@@ -1,0 +1,24 @@
+---
+title: "Ribbon"
+description: "Twisting, shaded bands of color."
+---
+
+<GradientExample type="ribbon" />
+
+Ribbon draws parallel bands that twist along their length, shaded across each fold so they read as three-dimensional strips. By default the palette mirrors from ribbon to ribbon (`tileMode="mirror"`), so neighbours flow into each other.
+
+`count` sets how many ribbons, `depth` how strongly each is shaded, and `angle` which way they run. `spin` slowly turns them.
+
+<Swatches
+  items={[
+    { label: "Few", note: "count={2}", gradient: { type: "ribbon", count: 2, colors: ["#C31432", "#FF0080", "#FFC371"] } },
+    { label: "Default", note: "count={4}", gradient: { type: "ribbon", colors: ["#C31432", "#FF0080", "#FFC371"] } },
+    { label: "Flat", note: "depth={0}", gradient: { type: "ribbon", depth: 0, colors: ["#C31432", "#FF0080", "#FFC371"] } },
+  ]}
+/>
+
+## Props
+
+<PropsTable of="ribbon" />
+
+<SharedProps />

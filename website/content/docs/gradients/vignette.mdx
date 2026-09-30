@@ -1,0 +1,26 @@
+---
+title: "Vignette"
+description: "Rounded falloff toward the edges, to frame what's in the middle."
+---
+
+<GradientExample type="vignette" />
+
+Vignette darkens the edges and leaves the center transparent. It's rarely used alone: put it last in a [stack](/docs/components/gradient-stack), or over an image, to draw the eye inward.
+
+`radius` is where darkening begins and `softness` how wide the falloff is. `roundness` shapes it: `1` is round, `0` follows the rectangle of the view. `color` sets the edge color; any color works, so a warm vignette is one prop away. For more control, `colors` replaces the transparent-to-`color` ramp entirely.
+
+<Swatches
+  items={[
+    { label: "Round", note: "roundness={1}", backdrop: "#EC38BC", gradient: { type: "vignette", radius: 0.35 } },
+    { label: "Rectangular", note: "roundness={0}", backdrop: "#EC38BC", gradient: { type: "vignette", radius: 0.5, roundness: 0 } },
+    { label: "Colored", note: "color='#3224AE'", backdrop: "#FFC371", gradient: { type: "vignette", radius: 0.3, color: "#3224AE" } },
+  ]}
+/>
+
+Vignettes are static, and cheap to add to any stack.
+
+## Props
+
+<PropsTable of="vignette" />
+
+<SharedProps without={["motion"]} />

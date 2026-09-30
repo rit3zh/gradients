@@ -1,0 +1,36 @@
+---
+title: "Sky"
+description: "Atmospheric scattering through a wide lens, from clear noon to ember dusk."
+---
+
+<GradientExample type="sky" />
+
+Sky renders a physically inspired atmosphere: each color channel fades with altitude at its own rate, through a camera with a gentle fisheye. It takes no `colors`; choose a `preset`, then adjust.
+
+<Swatches
+  tall
+  items={[
+    { label: "Clear", note: "'clear'", gradient: { type: "sky", preset: "clear" } },
+    { label: "Dusk", note: "'dusk'", gradient: { type: "sky", preset: "dusk" } },
+    { label: "Ember", note: "'ember'", gradient: { type: "sky", preset: "ember" } },
+    { label: "Tropical", note: "'tropical'", gradient: { type: "sky", preset: "tropical" } },
+    { label: "Overcast", note: "'overcast'", gradient: { type: "sky", preset: "overcast" } },
+    { label: "Verdant", note: "'verdant'", gradient: { type: "sky", preset: "verdant" } },
+  ]}
+/>
+
+## Custom atmospheres
+
+`extinction` sets how far red, green and blue each carry up the sky. Higher values keep a channel longer, so ember's `[0.4, 0.06, 0.01]` holds red all the way up while blue fades almost at once. `tint` colors the incoming light, `horizon` tilts the camera up, and `fisheye` curves the edges.
+
+```tsx
+<SkyGradient preset="dusk" horizon={0.6} tint="#FFD6A5" />
+```
+
+Sky is static, which makes it a cheap, beautiful base for a [stack](/docs/components/gradient-stack): add an aurora on top for night, or a glow for the sun.
+
+## Props
+
+<PropsTable of="sky" />
+
+<SharedProps without={["color", "motion"]} />

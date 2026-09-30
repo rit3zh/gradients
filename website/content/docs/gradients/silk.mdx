@@ -1,0 +1,24 @@
+---
+title: "Silk"
+description: "Folded fabric with a soft sheen along its creases."
+---
+
+<GradientExample type="silk" />
+
+Silk iterates a set of interfering waves until they fold over each other like fabric, then lays your palette across the folds. A `sheen` catches the light along the creases.
+
+<Swatches
+  items={[
+    { label: "Matte", note: "sheen={0}", gradient: { type: "silk", sheen: 0, colors: ["#240B36", "#7303C0", "#FF66FF"] } },
+    { label: "Default", note: "sheen={0.25}", gradient: { type: "silk", colors: ["#240B36", "#7303C0", "#FF66FF"] } },
+    { label: "Satin", note: "sheen={0.8}", gradient: { type: "silk", sheen: 0.8, colors: ["#240B36", "#7303C0", "#FF66FF"] } },
+  ]}
+/>
+
+`scale` makes the folds larger or finer. Silk is a lovely fill for [text](/docs/components/gradient-text): the folds keep moving inside the letters.
+
+## Props
+
+<PropsTable of="silk" />
+
+<SharedProps />

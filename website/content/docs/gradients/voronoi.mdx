@@ -1,0 +1,26 @@
+---
+title: "Voronoi"
+description: "Soft cells of color that slowly wander."
+---
+
+<GradientExample type="voronoi" />
+
+Each color owns a cell: the region of the view closest to its point. `smoothness` decides how the cells meet, from crisp edges to a gentle melt.
+
+Without `points`, `cells` points are scattered from `seed`. Colors cycle over the cells, so five colors across nine cells repeat nicely.
+
+<Swatches
+  items={[
+    { label: "Crisp", note: "smoothness={0.1}", gradient: { type: "voronoi", cells: 9, smoothness: 0.1, colors: ["#FF0080", "#FF5F6D", "#C471ED", "#7303C0", "#EC38BC"] } },
+    { label: "Soft", note: "smoothness={0.45}", gradient: { type: "voronoi", cells: 9, smoothness: 0.45, colors: ["#FF0080", "#FF5F6D", "#C471ED", "#7303C0", "#EC38BC"] } },
+    { label: "Melted", note: "smoothness={1}", gradient: { type: "voronoi", cells: 9, smoothness: 1, colors: ["#FF0080", "#FF5F6D", "#C471ED", "#7303C0", "#EC38BC"] } },
+  ]}
+/>
+
+With `drift`, the cell centers wander and the borders shift with them, like a slow lava lamp.
+
+## Props
+
+<PropsTable of="voronoi" />
+
+<SharedProps />

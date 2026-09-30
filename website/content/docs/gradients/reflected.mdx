@@ -1,0 +1,26 @@
+---
+title: "Reflected"
+description: "A linear gradient mirrored around a soft center line."
+---
+
+<GradientExample type="reflected" />
+
+The gradient runs from the mirror line outward in both directions, so the first color sits in the middle and the last at both edges. Unlike repeating a linear gradient, the fold is rounded: `softness` keeps the mirror line from showing a crease.
+
+`offset` slides the mirror line along the axis, from `-1` to `1`, and `angle` or `start`/`end` orient it like a [linear gradient](/docs/gradients/linear).
+
+<Swatches
+  items={[
+    { label: "Soft", note: "softness={0.35}", gradient: { type: "reflected", colors: ["#3224AE", "#FF66FF", "#FFC371"] } },
+    { label: "Sharp", note: "softness={0}", gradient: { type: "reflected", softness: 0, colors: ["#3224AE", "#FF66FF", "#FFC371"] } },
+    { label: "Offset", note: "offset={0.4}", gradient: { type: "reflected", offset: 0.4, colors: ["#3224AE", "#FF66FF", "#FFC371"] } },
+  ]}
+/>
+
+It's a natural fit for horizon lines, light bars and the sheen across a button.
+
+## Props
+
+<PropsTable of="reflected" />
+
+<SharedProps />

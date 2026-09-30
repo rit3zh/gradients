@@ -1,0 +1,53 @@
+---
+title: "Dither, grain and tilt"
+description: "The finishing touches every gradient view shares, from banding-free output to device motion."
+---
+
+## Dither
+
+Smooth, dark gradients over large areas show bands on 8-bit displays: visible steps where the color should flow. Every view adds a tiny interleaved noise pattern before the final 8-bit write, which breaks the bands up below the threshold you can see.
+
+It's on by default and costs one line of shader math. Turn it off only if you need exact, reproducible pixel values:
+
+```tsx
+<RadialGradient dither={false} />
+```
+
+## Grain
+
+`grain` adds visible film grain, from 0 to 1. It's fixed to the pixel grid rather than animated, so it reads as a texture of the surface instead of noise on the screen.
+
+<Swatches
+  items={[
+    { label: "None", note: "grain={0}", gradient: { type: "radial", radius: 1.3, colors: ["#FDEFF9", "#EC38E3", "#3B095C", "#03001E"] } },
+    { label: "Subtle", note: "grain={0.4}", grain: 0.4, gradient: { type: "radial", radius: 1.3, colors: ["#FDEFF9", "#EC38E3", "#3B095C", "#03001E"] } },
+    { label: "Strong", note: "grain={1}", grain: 1, gradient: { type: "radial", radius: 1.3, colors: ["#FDEFF9", "#EC38E3", "#3B095C", "#03001E"] } },
+  ]}
+/>
+
+For grain that blends with the colors beneath it rather than adding to them, layer a `NoiseGradient` in `overlay` or `softLight` inside a stack instead. See [Composition](/docs/guides/composition#blend-modes).
+
+## Device motion
+
+With `deviceMotion`, the view reads the device's attitude and hands the tilt to the shader. The holographic and iridescent types use it to move their bands and glints the way real foil and film catch light.
+
+<GradientExample type="holographic" />
+
+```tsx
+<HolographicGradient style={styles.card} />           {/* on by default */}
+<IridescentGradient deviceMotion style={styles.card} />
+```
+
+A few details make it feel physical rather than jittery:
+
+- **Smoothed.** Readings are filtered, so hand tremor doesn't shake the surface.
+- **Self-centering.** The neutral position slowly follows how the phone is held, so the effect works lying in bed or standing up.
+- **Shared.** One motion subscription serves every view that asks for it, and sensors stop as soon as the last of them leaves the window or turns it off.
+
+<Callout title="On this site">
+  The previews tilt with the pointer instead. Move it across a phone to see the same response.
+</Callout>
+
+## Props
+
+<PropsTable of="finishing" />

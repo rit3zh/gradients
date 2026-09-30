@@ -1,0 +1,34 @@
+---
+title: "Freeform"
+description: "Colors pinned to arbitrary points and blended by distance."
+---
+
+<GradientExample type="freeform" />
+
+Freeform places each color at its own point, anywhere in the view, and blends them by inverse distance. There's no grid, so any number of colors from 1 to 32 works, and points can go wherever the design needs them.
+
+Without `points`, colors are scattered evenly from `seed`: a quick way to get a pleasing, stable layout.
+
+```tsx
+<FreeformGradient colors={['#FF0080', '#7303C0', '#FF8C00', '#3224AE']} seed={3} />
+```
+
+## Smoothness
+
+`smoothness` controls how far each color reaches. Low values give distinct pools of color; high values melt them into a haze.
+
+<Swatches
+  items={[
+    { label: "Pools", note: "smoothness={0}", gradient: { type: "freeform", smoothness: 0, points: [[0.2, 0.2], [0.8, 0.25], [0.3, 0.75], [0.75, 0.8]], colors: ["#FF0080", "#7303C0", "#FF8C00", "#3224AE"] } },
+    { label: "Default", note: "smoothness={0.5}", gradient: { type: "freeform", points: [[0.2, 0.2], [0.8, 0.25], [0.3, 0.75], [0.75, 0.8]], colors: ["#FF0080", "#7303C0", "#FF8C00", "#3224AE"] } },
+    { label: "Haze", note: "smoothness={1}", gradient: { type: "freeform", smoothness: 1, points: [[0.2, 0.2], [0.8, 0.25], [0.3, 0.75], [0.75, 0.8]], colors: ["#FF0080", "#7303C0", "#FF8C00", "#3224AE"] } },
+  ]}
+/>
+
+With `drift`, points roam within a quarter of the view, and freeform stays cheap while doing it: the blending runs entirely in the shader.
+
+## Props
+
+<PropsTable of="freeform" />
+
+<SharedProps />

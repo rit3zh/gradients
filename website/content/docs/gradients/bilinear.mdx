@@ -1,0 +1,25 @@
+---
+title: "Bilinear"
+description: "One color per corner, blended across the view."
+---
+
+<GradientExample type="bilinear" />
+
+The simplest surface: four colors, one per corner, in the order top left, top right, bottom left, bottom right. Fewer colors repeat to fill the corners.
+
+`smoothness` eases the blend. At `0` it's a straight bilinear interpolation; at `1` each corner holds its color a little longer before blending, which avoids the faint cross that linear blending can show.
+
+<Swatches
+  items={[
+    { label: "Linear", note: "smoothness={0}", gradient: { type: "bilinear", colors: ["#FC5C7D", "#FFC371", "#6A82FB", "#C471ED"] } },
+    { label: "Eased", note: "smoothness={1}", gradient: { type: "bilinear", smoothness: 1, colors: ["#FC5C7D", "#FFC371", "#6A82FB", "#C471ED"] } },
+  ]}
+/>
+
+Bilinear gradients never animate on their own, so they're ideal for large static surfaces. Pair them with a [transition](/docs/guides/transitions) to shift the corners on state changes.
+
+## Props
+
+<PropsTable of="bilinear" />
+
+<SharedProps />

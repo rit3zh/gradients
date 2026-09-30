@@ -1,0 +1,24 @@
+---
+title: "Sweep"
+description: "An arc of color between two angles, rotating in place."
+---
+
+<GradientExample type="sweep" />
+
+Where a conic always covers a full turn, a sweep spreads its colors between `startAngle` and `endAngle`. The gap between the ends is split: the half nearer the end keeps the last color, the half nearer the start keeps the first. That gives a clean arc with a hard edge where the gap's halves meet.
+
+<Swatches
+  items={[
+    { label: "Half turn", note: "-90 to 90", gradient: { type: "sweep", startAngle: -90, endAngle: 90, colors: ["#FC5C7D", "#C471ED", "#6A82FB"] } },
+    { label: "Gauge", note: "-135 to 135", gradient: { type: "sweep", center: [0.5, 0.6], startAngle: -135, endAngle: 135, colors: ["#FC5C7D", "#C471ED", "#6A82FB"] } },
+    { label: "Reversed", note: "135 to -135", gradient: { type: "sweep", center: [0.5, 0.6], startAngle: 135, endAngle: -135, colors: ["#FC5C7D", "#C471ED", "#6A82FB"] } },
+  ]}
+/>
+
+Swapping the angles reverses the direction. Use it for gauges, progress rings and radar-style scanners with `spin`.
+
+## Props
+
+<PropsTable of="sweep" />
+
+<SharedProps />

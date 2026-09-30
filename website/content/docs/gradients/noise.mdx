@@ -1,0 +1,30 @@
+---
+title: "Noise"
+description: "Fractal noise mapped through your colors: marble, clouds, texture."
+---
+
+<GradientExample type="noise" />
+
+Noise samples layered simplex noise across the view and maps the result onto your color ramp. With two or three dark colors it becomes a cloudy, moody background; with black and white at low opacity it's a texture for [stacks](/docs/components/gradient-stack).
+
+`scale` zooms the field, `octaves` adds finer detail, and `warp` feeds the noise back into itself for swirled, marbled shapes. `contrast` stretches the field across more of the ramp.
+
+<Swatches
+  items={[
+    { label: "Clouds", note: "warp={0}", gradient: { type: "noise", warp: 0, colors: ["#23074D", "#B06AB3", "#FF5F6D"] } },
+    { label: "Marble", note: "warp={1.2}", gradient: { type: "noise", warp: 1.2, colors: ["#23074D", "#B06AB3", "#FF5F6D"] } },
+    { label: "Texture", note: "scale={6}", gradient: { type: "noise", scale: 6, octaves: 6, colors: ["#000000", "#FFFFFF"] } },
+  ]}
+/>
+
+## Motion
+
+Noise is still by default (`speed` is 0). Any `speed` above zero makes the field evolve slowly through time; values around `0.2` to `0.4` look like drifting cloud.
+
+`seed` picks a different region of the noise field, so several noise layers don't look identical.
+
+## Props
+
+<PropsTable of="noise" />
+
+<SharedProps />

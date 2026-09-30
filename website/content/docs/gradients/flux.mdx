@@ -1,0 +1,24 @@
+---
+title: "Flux"
+description: "A slow, turbulent blend of a few colors."
+---
+
+<GradientExample type="flux" />
+
+Flux swirls the view around its center and adds a layer of fine ripples, then blends your palette across two soft diagonals. It works best with two to four colors and gives a warm, organic movement that never repeats exactly.
+
+`turbulence` controls the swirl, `ripple` the fine waves on top, `scale` the size of both.
+
+<Swatches
+  items={[
+    { label: "Still water", note: "ripple={0}", gradient: { type: "flux", ripple: 0, colors: ["#FF0080", "#7303C0", "#FF8C00"] } },
+    { label: "Default", note: "defaults", gradient: { type: "flux", colors: ["#FF0080", "#7303C0", "#FF8C00"] } },
+    { label: "Stormy", note: "turbulence={2}", gradient: { type: "flux", turbulence: 2, colors: ["#FF0080", "#7303C0", "#FF8C00"] } },
+  ]}
+/>
+
+## Props
+
+<PropsTable of="flux" />
+
+<SharedProps />

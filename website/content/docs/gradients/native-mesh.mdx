@@ -1,0 +1,88 @@
+---
+title: "Native mesh"
+description: "The platform's own mesh gradient: SwiftUI MeshGradient on iOS, Canvas vertices on Android."
+---
+
+<Callout type="warn" title="Native mesh gradient">
+  This gradient has no preview here because it is drawn by the platform's own mesh renderer on both iOS and Android, and there is no web version. On iOS it renders SwiftUI's `MeshGradient` (iOS 18 and later); on iOS 16 and 17 it falls back to the library's Metal mesh. On Android it renders with `Canvas.drawVertices`. Run it on a device or simulator to see it.
+</Callout>
+
+`NativeMeshGradient` hands the grid straight to the operating system instead of the library's shader pipeline. Use it when you want a mesh that matches the system's own rendering exactly, for example alongside other SwiftUI surfaces.
+
+It takes the same shape as SwiftUI's `MeshGradient`: a `columns × rows` grid of points in unit coordinates, and one color per point, row by row.
+
+```tsx
+import { NativeMeshGradient } from '@rit3zh/gradients';
+
+<NativeMeshGradient
+  columns={3}
+  rows={3}
+  points={[
+    [0, 0], [0.5, 0], [1, 0],
+    [0, 0.5], [0.8, 0.2], [1, 0.5],
+    [0, 1], [0.5, 1], [1, 1],
+  ]}
+  colors={[
+    'black', 'black', 'black',
+    'blue', 'blue', 'blue',
+    'green', 'green', 'green',
+  ]}
+  style={{ flex: 1 }}
+/>
+```
+
+If you leave out `points`, the mesh uses an even grid. If you pass them, there must be exactly `columns × rows`. With fewer colors than points, the list repeats.
+
+## Static or animated
+
+A native mesh is static by default. It draws once and only redraws when its props change. There are two ways to animate it, and you can combine them.
+
+`drift` sets the inner points wandering on their own, the same way it does on [`MeshGradient`](/docs/gradients/mesh). Edge points only slide along their edge, so the mesh always covers the view. `speed` scales the motion, and `paused` freezes it in place.
+
+```tsx
+<NativeMeshGradient
+  columns={3}
+  rows={3}
+  colors={colors}
+  drift={0.9}
+  speed={0.6}
+/>
+```
+
+`animationDuration` (in milliseconds) eases between old and new `points` or `colors` when you change them. This only works when `columns` and `rows` stay the same; changing the grid size jumps straight to the new mesh.
+
+```tsx
+<NativeMeshGradient
+  columns={3}
+  rows={3}
+  animationDuration={600}
+  points={pulled ? pulledPoints : restingPoints}
+  colors={colors}
+/>
+```
+
+Both run on the platform's frame clock and stop as soon as there's nothing left to animate.
+
+## Mesh or native mesh?
+
+[`MeshGradient`](/docs/gradients/mesh) runs on the library's renderer. It supports layering, masks, blend modes and the web preview. `NativeMeshGradient` is a plain native view: it can't be stacked inside `GradientStack`, masked or blended, and it has no web version.
+
+## Props
+
+<PropsTable
+  rows={[
+    { name: "colors", type: "ColorValue[]", required: true, description: "One color per point, row by row. The list repeats if it's shorter than columns × rows." },
+    { name: "columns", type: "number", default: "2", description: "Points per row, from 2 to 16." },
+    { name: "rows", type: "number", default: "2", description: "Points per column, from 2 to 16." },
+    { name: "points", type: "([x, y] | { x, y })[]", description: "Point positions in unit coordinates. Must have exactly columns × rows entries. Defaults to an even grid." },
+    { name: "smoothsColors", type: "boolean", default: "true", description: "Cubic color interpolation between points. false blends patches linearly." },
+    { name: "background", type: "ColorValue", default: "transparent", description: "Fills any area the mesh doesn't cover when edge points move inward." },
+    { name: "colorSpace", type: "'device' | 'perceptual'", default: "'device'", description: "Blend in device RGB or in a perceptual space (OKLab on Android and on the iOS fallback)." },
+    { name: "animationDuration", type: "number", default: "0", description: "Milliseconds to ease between point or color changes. 0 applies them immediately." },
+    { name: "drift", type: "number", default: "0", description: "How far the inner points wander on their own. 0 keeps the mesh static." },
+    { name: "speed", type: "number", default: "1", description: "Scales how fast `drift` moves." },
+    { name: "paused", type: "boolean", default: "false", description: "Freezes `drift` and any running transition in place." },
+  ]}
+/>
+
+It also accepts the standard React Native `View` props, such as `style`.

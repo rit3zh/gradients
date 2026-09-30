@@ -1,0 +1,70 @@
+---
+title: "Introduction"
+description: "Native gradients for Expo, drawn by the GPU. Twenty-seven types, one API, the same pixels on iOS and Android."
+---
+
+<GradientExample type="mesh" />
+
+expo-gradients renders every gradient as a shader: Metal on iOS, OpenGL ES 3.0 on Android. A still gradient is drawn once and then costs nothing. An animated one advances on a native frame clock, so the JavaScript thread never runs per frame, even while colors spring between palettes or a mesh drifts across the screen.
+
+It covers the classics (linear, radial, conic) and goes well past them: bicubic meshes, freeform color points, fractal noise, aurora curtains, thin-film iridescence, holographic foil that follows device tilt, and lighting layers like glow, spotlight and vignette. Any of them can be stacked, blended, masked to text or drawn as a border.
+
+<Callout title="Every preview here is live">
+  The phones on this site run the library's own GLSL shaders in your browser through WebGL2. What you see is what ships, down to the color math.
+</Callout>
+
+## At a glance
+
+- **27 gradient types** in five families: geometric, surface, procedural, flow and lighting.
+- **Native animation.** `spin`, `flow`, `drift` and `speed` animate on the GPU. Prop changes can transition with timing curves or springs, and keyframes loop without any JavaScript.
+- **Composition.** A [`GradientStack`](/docs/components/gradient-stack) blends any number of layers with 18 blend modes in a single draw.
+- **Beyond backgrounds.** Paint [text](/docs/components/gradient-text), [mask](/docs/components/gradient-mask) any view, or draw an animated [border](/docs/components/gradient-border).
+- **Quality by default.** Colors blend in OKLab, and dithering removes banding.
+- **Measurable.** A built-in [profiler](/docs/api/gradient-profiler) reports frame times, GPU time and memory on device.
+
+## A first look
+
+```tsx title="App.tsx"
+import { MeshGradient } from '@rit3zh/gradients';
+import { StyleSheet } from 'react-native';
+
+export default function App() {
+  return (
+    <MeshGradient
+      style={StyleSheet.absoluteFill}
+      colors={['#7303C0', '#FF0080', '#FCB045', '#3224AE', '#EC38BC', '#FF5F6D', '#6A82FB', '#C471ED', '#FD1D1D']}
+      drift={0.9}
+      speed={0.6}
+    />
+  );
+}
+```
+
+A gradient is a regular view. Size it with `style`, put children inside it, and pass the options for its type as props.
+
+## Platform support
+
+| Platform | Renderer | Minimum |
+| --- | --- | --- |
+| iOS | Metal | iOS 16.4 |
+| Android | OpenGL ES 3.0, on a dedicated render thread | Any device with OpenGL ES 3.0 |
+| Web | Not supported | |
+
+Gradients is a native module, so it runs in a [development build](https://docs.expo.dev/develop/development-builds/introduction/), not in Expo Go.
+
+## Next steps
+
+<Cards>
+  <Card href="/docs/installation" title="Installation">
+    Add the package and create a development build.
+  </Card>
+  <Card href="/docs/quick-start" title="Quick start">
+    Your first gradient, animated, layered and on text.
+  </Card>
+  <Card href="/docs/gradients" title="All gradients">
+    Browse the 27 types, each with a live preview.
+  </Card>
+  <Card href="/docs/guides/performance" title="Performance">
+    How it stays cheap, and benchmark numbers.
+  </Card>
+</Cards>

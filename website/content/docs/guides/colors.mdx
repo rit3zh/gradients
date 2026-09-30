@@ -1,0 +1,94 @@
+---
+title: "Colors and stops"
+description: "How colors are parsed, placed, blended and extended, and why they stay vivid."
+---
+
+Most gradient types map a value across the view onto a **color ramp**: your `colors`, placed at `stops`, blended in an `interpolation` space and shaped by `easing`. The ramp is built once on the native side into 256 samples, so its shape costs nothing per frame.
+
+## Colors
+
+`colors` takes any value React Native's `processColor` understands: hex (`#RGB`, `#RRGGBB`, `#RRGGBBAA`), `rgb()`, `rgba()`, `hsl()`, named colors and `transparent`.
+
+```tsx
+<LinearGradient colors={['#FF5FA2', 'rgb(123, 97, 255)', 'hsl(35, 100%, 71%)']} />
+```
+
+Every type has a default palette, so `colors` is optional. Types built from points (mesh, bilinear, freeform, voronoi) read `colors` as one color per point instead of a ramp.
+
+## Stops
+
+`stops` places each color along the gradient, from 0 to 1. Without it, colors are spaced evenly.
+
+<Swatches
+  items={[
+    { label: "Evenly spaced", note: "no stops", gradient: { type: "linear", angle: 90, colors: ["#7B61FF", "#FF5FA2", "#FFB86B"] } },
+    { label: "Weighted", note: "[0, 0.8, 1]", gradient: { type: "linear", angle: 90, colors: ["#7B61FF", "#FF5FA2", "#FFB86B"], stops: [0, 0.8, 1] } },
+  ]}
+/>
+
+A few rules keep ramps predictable:
+
+- The number of stops has to match the number of colors. If it doesn't, stops are ignored and spacing is even.
+- Stops never run backwards. A stop lower than the one before it is raised to match, which gives a hard edge.
+- The first and last stop set the ramp's range. Outside it, [`tileMode`](#tile-modes) decides what you see.
+
+```tsx
+// A hard edge at 50%: two stops share a position.
+<LinearGradient colors={['#111', '#111', '#FF5FA2', '#FF5FA2']} stops={[0, 0.5, 0.5, 1]} />
+```
+
+## Interpolation
+
+The color space the ramp blends in changes the midpoints dramatically. The default, `oklab`, is perceptual: lightness and saturation change evenly, so the middle of a gradient never sinks into gray.
+
+<Swatches
+  items={[
+    { label: "OKLab", note: "'oklab' (default)", gradient: { type: "linear", angle: 90, colors: ["#0047FF", "#FFE500"], interpolation: "oklab" } },
+    { label: "sRGB", note: "'srgb'", gradient: { type: "linear", angle: 90, colors: ["#0047FF", "#FFE500"], interpolation: "srgb" } },
+    { label: "Linear light", note: "'linear'", gradient: { type: "linear", angle: 90, colors: ["#0047FF", "#FFE500"], interpolation: "linear" } },
+  ]}
+/>
+
+Use `srgb` when you need to match a design tool, CSS or another library pixel for pixel. `linear` mixes light physically, which makes highlights bloom and suits lighting layers.
+
+Blending always happens with premultiplied alpha, so fading a color into `transparent` doesn't pass through a dark fringe.
+
+## Easing
+
+`easing` shapes every segment between two stops. Pass a named curve or a cubic bezier.
+
+<Swatches
+  items={[
+    { label: "Linear", note: "'linear'", gradient: { type: "linear", angle: 90, colors: ["#1E1B4B", "#F9A8D4"] } },
+    { label: "Ease in out", note: "'easeInOut'", gradient: { type: "linear", angle: 90, colors: ["#1E1B4B", "#F9A8D4"], easing: "easeInOut" } },
+    { label: "Custom", note: "[0.9, 0, 0.1, 1]", gradient: { type: "linear", angle: 90, colors: ["#1E1B4B", "#F9A8D4"], easing: [0.9, 0, 0.1, 1] } },
+  ]}
+/>
+
+| Name | Curve |
+| --- | --- |
+| `linear` | `[0, 0, 1, 1]` |
+| `ease` | `[0.25, 0.1, 0.25, 1]` |
+| `easeIn` | `[0.42, 0, 1, 1]` |
+| `easeOut` | `[0, 0, 0.58, 1]` |
+| `easeInOut` | `[0.42, 0, 0.58, 1]` |
+| `smooth` | `[0.65, 0, 0.35, 1]` |
+
+## Tile modes
+
+Geometric gradients take a `tileMode` for everything past the first and last stop. Here the colors only span the middle third:
+
+<Swatches
+  items={[
+    { label: "Clamp", note: "'clamp'", gradient: { type: "linear", angle: 90, colors: ["#7B61FF", "#FF5FA2", "#FFB86B"], stops: [0.35, 0.5, 0.65], tileMode: "clamp" } },
+    { label: "Repeat", note: "'repeat'", gradient: { type: "linear", angle: 90, colors: ["#7B61FF", "#FF5FA2", "#FFB86B"], stops: [0.35, 0.5, 0.65], tileMode: "repeat" } },
+    { label: "Mirror", note: "'mirror'", gradient: { type: "linear", angle: 90, colors: ["#7B61FF", "#FF5FA2", "#FFB86B"], stops: [0.35, 0.5, 0.65], tileMode: "mirror" } },
+    { label: "Decal", note: "'decal'", backdrop: "#111", gradient: { type: "linear", angle: 90, colors: ["#7B61FF", "#FF5FA2", "#FFB86B"], stops: [0.35, 0.5, 0.65], tileMode: "decal" } },
+  ]}
+/>
+
+When `repeat` meets a palette whose ends differ, you get a visible seam where the last color jumps back to the first. Repeat the first color at the end to close the loop.
+
+## Props
+
+<PropsTable of="color" />

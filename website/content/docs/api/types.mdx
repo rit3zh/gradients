@@ -1,0 +1,143 @@
+---
+title: "Types"
+description: "The TypeScript types exported by Gradients, for building on top of the components."
+---
+
+Everything below is exported from the package root:
+
+```ts
+import type { TGradientLayer, TGradientType, TBlendMode, ILinearOptions } from '@rit3zh/gradients';
+```
+
+## Gradients
+
+```ts
+type TGradientType =
+  | 'linear' | 'radial' | 'conic' | 'angular' | 'sweep' | 'diamond' | 'reflected'
+  | 'mesh' | 'freeform' | 'bilinear' | 'voronoi'
+  | 'noise' | 'aurora' | 'liquid' | 'iridescent' | 'holographic'
+  | 'wave' | 'silk' | 'smoke' | 'ribbon' | 'flux' | 'interlace' | 'strata'
+  | 'sky' | 'glow' | 'spotlight' | 'vignette';
+
+/** One layer as data: a type plus that type's options. */
+type TGradientLayer = { [K in TGradientType]: { type: K } & IGradientOptionsMap[K] }[TGradientType];
+
+/** Just the layer for one type. */
+type TGradientLayerOf<T extends TGradientType> = Extract<TGradientLayer, { type: T }>;
+```
+
+`IGradientOptionsMap` maps each type to its options interface: `ILinearOptions`, `IRadialOptions`, `IMeshOptions` and so on. `angular` shares `IConicOptions`.
+
+## Component props
+
+```ts
+/** The props of a typed component, e.g. TGradientOf<'mesh'> for MeshGradient. */
+type TGradientOf<T extends TGradientType> = IGradientView &
+  IGradientOptionsMap[T] & {
+    keyframes?: readonly Partial<IGradientOptionsMap[T]>[];
+  };
+
+interface IGradientView extends Omit<ViewProps, 'children' | 'style'>, IGradientPlayback {
+  style?: StyleProp<ViewStyle>;
+  children?: ReactNode;
+}
+
+interface IGradientPlayback {
+  transition?: boolean | TGradientTransition;
+  loop?: boolean;
+  paused?: boolean;
+  dither?: boolean;
+  grain?: number;
+  deviceMotion?: boolean;
+}
+```
+
+Every typed component has a props alias as well: `TLinearGradient`, `TMeshGradient`, `THolographicGradient` and so on.
+
+## Shared options
+
+```ts
+interface IColorOptions {
+  colors?: readonly ColorValue[];
+  stops?: readonly number[];
+  interpolation?: TColorInterpolation; // 'srgb' | 'linear' | 'oklab'
+  easing?: TEasing;
+}
+
+interface ICompositionOptions {
+  opacity?: number;
+  blendMode?: TBlendMode;
+}
+
+interface IMotionOptions {
+  speed?: number;
+  seed?: number;
+}
+
+type TPoint = { x: number; y: number } | readonly [number, number];
+type TTileMode = 'clamp' | 'repeat' | 'mirror' | 'decal';
+type TEasingName = 'linear' | 'ease' | 'easeIn' | 'easeOut' | 'easeInOut' | 'smooth';
+type TEasing = TEasingName | readonly [number, number, number, number];
+```
+
+`TBlendMode` lists the 18 modes described in [Composition](/docs/guides/composition#blend-modes).
+
+## Transitions
+
+```ts
+type TGradientTransition = ITimingTransition | ISpringTransition;
+
+interface ITimingTransition {
+  type?: 'timing';
+  duration?: number;
+  delay?: number;
+  easing?: TEasing;
+}
+
+interface ISpringTransition {
+  type: 'spring';
+  damping?: number;
+  stiffness?: number;
+  mass?: number;
+  delay?: number;
+}
+```
+
+## Elements
+
+```ts
+/** A rendered gradient component, accepted by GradientText, GradientMask and GradientBorder. */
+type TGradientElement<T extends TGradientType = TGradientType> = ReactElement<Partial<TGradientOf<T>>>;
+```
+
+Passing anything that isn't a gradient component or `GradientStack` throws a `TypeError` whose message starts with `[@rit3zh/gradients]` and names the prop.
+
+## Profiling
+
+```ts
+interface IGradientPerformanceReport {
+  platform: 'ios' | 'android';
+  device: string;
+  gpuName: string;
+  simulator: boolean;
+  duration: number;
+  frames: number;
+  renders: number;
+  views: number;
+  fps: number;
+  droppedFrames: number;
+  cpu: IPerformanceSummary;
+  gpu: IPerformanceSummary | null;
+  gpuUtilization: number | null;
+  processCpu: number;
+  memory: number;
+}
+
+interface IPerformanceSummary {
+  mean: number;
+  p50: number;
+  p95: number;
+  max: number;
+  samples: number;
+}
+```

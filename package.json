@@ -1,5 +1,5 @@
 {
-  "name": "expo-gradients",
+  "name": "@rit3zh/gradients",
   "version": "0.1.0",
   "description": "Testing for now.",
   "main": "build/index.js",
@@ -17,6 +17,7 @@
     "react-native",
     "expo",
     "expo-gradients",
+    "gradients",
     "ExpoGradients"
   ],
   "repository": "https://github.com/rit3zh/expo-gradients",
