@@ -31,13 +31,13 @@
     "gradients",
     "ExpoGradients"
   ],
-  "repository": "https://github.com/rit3zh/expo-gradients",
+  "repository": "https://github.com/rit3zh/gradients",
   "bugs": {
-    "url": "https://github.com/rit3zh/expo-gradients/issues"
+    "url": "https://github.com/rit3zh/gradients/issues"
   },
   "author": "rit3zh <thisismyn07@gmail.com> (https://github.com/rit3zh)",
   "license": "MIT",
-  "homepage": "https://github.com/rit3zh/expo-gradients#readme",
+  "homepage": "https://gradients.rit3zh.dev/",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.26.0",
