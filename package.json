@@ -1,6 +1,6 @@
 {
   "name": "@rit3zh/gradients",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Native, GPU-rendered gradients for Expo. Metal on iOS. OpenGL on Android. 27 types, one API.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
